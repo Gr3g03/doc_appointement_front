@@ -30,7 +30,7 @@ const TestPage: FC = () => {
         }
     })
 
-    const [userName, setUserName] = useState(null)
+    const [email, setEmail] = useState(null)
     const [password, setPassword] = useState(null)
 
     const dispatch = useDispatch();
@@ -39,7 +39,7 @@ const TestPage: FC = () => {
 
 
     const handleSubmit = () => {
-        dispatch(onLogin({ userName, password }));
+        dispatch(onLogin({ email, password }));
     }
 
     const handleButtonClick = () => {
@@ -66,7 +66,7 @@ const TestPage: FC = () => {
                     </Typography>
                     <Box >
                         <TextField
-                            onChange={(e) => setUserName(e.target.value)}
+                            onChange={(e) => setEmail(e.target.value)}
                             margin="normal"
                             required
                             fullWidth
