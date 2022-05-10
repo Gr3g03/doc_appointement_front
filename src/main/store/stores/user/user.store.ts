@@ -16,4 +16,4 @@ const userStore = createSlice({
 
 export default userStore;
 
-export const { setUser } = userStore.actions;
+export const { setUser, invalidateUser } = userStore.actions;

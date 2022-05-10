@@ -4,13 +4,26 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setModal } from "../../store/stores/modal/modal.store";
+import Button from '@mui/material/Button';
+import onLogout from "../../store/stores/user/login.store.on-logout"
+
 
 function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+
+  const handleSubmit = () => {
+    dispatch(onLogout())
+  }
+
   return (
     <header>
-      <nav className="navigation-header">
+
+      <Button className="primary" color="secondary" variant="outlined" onClick={handleSubmit} sx={{
+      }}>Sign Out</Button>
+
+      {/* <nav className="navigation-header">
         <ul className="logo-section">
           <li className="logo-section__item">
             <img src={logo} />
@@ -42,7 +55,7 @@ function Header() {
             <h3>Hot Line +38344255255</h3>
           </li>
         </ul>
-      </nav>
+      </nav> */}
     </header>
   );
 }
