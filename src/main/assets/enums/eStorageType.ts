@@ -1,6 +1,5 @@
 enum eStorageType {
-  Local,
-  Session
-}
-
+    Local,
+    Session
+  }
 export default eStorageType;

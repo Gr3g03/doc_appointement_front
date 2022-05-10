@@ -5,22 +5,16 @@ import { setUser } from './user.store';
 import  ILoginRequest  from '../../../interfaces/ILoginRequest';
 
 const onLogin = (payload: ILoginRequest): AppThunk => async (dispatch) => {
-
   try {
-    
     const response = await AuthManager.loginWithCredentials({ ...payload });
-
     if (response.user && response.token) {
+      
       dispatch(setUser(response.user));
-      dispatch(navigateTo('/dashboard'));
+      dispatch(navigateTo('/'));
     }
-
-  } 
-  
-  catch (err:any) {
+  } catch (err:any) {
     Error( err.message);
   }
-
 };
 
 export default onLogin;
