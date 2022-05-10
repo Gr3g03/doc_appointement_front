@@ -1,8 +1,9 @@
 import { FC } from "react";
+
 const Dashboard: FC = () => {
   return (
     <>
-      <h3>Dashboard</h3>
+      <h2>test</h2>
     </>
   );
 };

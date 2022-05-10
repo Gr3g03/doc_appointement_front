@@ -17,7 +17,7 @@ class AuthManager {
     let userInfo: IUser = null;
     try {
       let result = await (
-        await axios.get(`authentication/validate-token?token=${token}`)
+        await axios.get(`/validate-token?token=${token}`)
       ).data;
       userInfo = result;
     } catch (e) {
@@ -29,7 +29,7 @@ class AuthManager {
   static async getTokenWithCredentials(
     payload: ILoginRequest
   ): Promise<IUserInfo> {
-    const { data } = await axios.post("authentication/login", payload);
+    const { data } = await axios.post("/login", payload);
     const user = await AuthManager.getUserFromToken(data.token);
 
     const responseLogin: IUserInfo = {
@@ -52,7 +52,7 @@ class AuthManager {
   }
 
   static async register(user: IUser): Promise<void> {
-    const { data } = await axios.post("authentication/register", user);
+    const { data } = await axios.post("register", user);
     if (data?.token) {
       JwtManager.setAccessToken(data.token);
       window.location.pathname = "/";

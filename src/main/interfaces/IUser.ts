@@ -1,9 +1,15 @@
 interface IUser {
   id?: number;
-  fullName: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  password?: string;
-  isDoctor: boolean;
+  address: string
+  phone: string
+  userName: string
+  bio: string
+  password?: string
+  avatar: string
+  isDoctor: boolean
 }
 
 export default IUser;
