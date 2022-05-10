@@ -1,15 +1,15 @@
-
 interface IUser {
-	username: string,
-	full_name: string,
-	avatar: string,
-	email: string,
-	birthdate: string,
-	address: string,
-	bio: string,
-	isDoctor: boolean,
-	phone: string,
-	password: string
+  	id?: number;
+	firstName: string;
+	lastName: string;
+	email: string;
+	address: string
+	phone: string
+	userName: string
+	bio: string
+	password?: string
+	avatar: string
+	isDoctor: string;
 }
 
 export default IUser;

@@ -1,5 +1,5 @@
-
-export default interface ILoginRequest {
-	email?: string;
+export default interface ILoginRequest
+{
+	emailLogin?: string
 	password?: string;
 } 
