@@ -1,0 +1,39 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.main_wrapper {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.user_main_dashboard {
+    margin: 0.5rem;
+    display: grid;
+    margin-top: 5rem;
+    display: grid;
+    grid-template-columns: 1fr 0.5fr;
+    gap: 1rem;
+
+}
+
+.calendar_Section {
+    display: grid;
+    /* border: 1px solid black; */
+    box-shadow: 0px 10px 18px -9px rgb(0, 0, 0);
+    height: 100vh;
+    padding: 0.5rem;
+
+}
+
+.left_section {
+    display: grid;
+    box-shadow: 0px 10px 18px -9px rgb(0, 0, 0);
+    height: 100vh;
+    padding: 0.5rem;
+
+}

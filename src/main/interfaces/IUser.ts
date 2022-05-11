@@ -1,3 +1,5 @@
+import IEvent from "./IEvent";
+
 interface IUser {
   id?: number;
   firstName: string;
@@ -10,6 +12,8 @@ interface IUser {
   password?: string
   avatar: string
   isDoctor: boolean
+  postedAppointements?: IEvent[]
+  acceptedAppointemets?: IEvent[]
 }
 
 export default IUser;

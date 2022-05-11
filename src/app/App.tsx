@@ -7,6 +7,7 @@ import Intro from "../pages/Intro/intro"
 import Dashboard from "../pages/dashboard/dashboard";
 import Register from "../pages/register/register"
 import UserDashboard from "../pages/dashboard/userDashboard/index"
+import Profile from "../pages/profile/profile"
 
 const App = () => {
   return (
@@ -19,6 +20,8 @@ const App = () => {
         <Route path="/register" element={<PrivateRoute isPageLogin><Register /></PrivateRoute>} />
         <Route path="/dashboard" element={<PrivateRoute>{<Dashboard />}</PrivateRoute>} />
         <Route path="/dashboard-user" element={<PrivateRoute>{<UserDashboard />}</PrivateRoute>} />
+        <Route path="/user-profile" element={<PrivateRoute>{<Profile />}</PrivateRoute>} />
+        <Route path="/doctor-profile" element={<PrivateRoute>{<Profile />}</PrivateRoute>} />
       </Routes>
     </BrowserRouter>
   );

@@ -51,6 +51,8 @@ const RegisterPage: FC = () => {
         const userName = e.target.userName.value
         const avatar = e.target.avatar.value
         const isDoctor = true
+        const postedAppointements = []
+        const acceptedAppointemets = []
 
         const password = e.target.password.value
         const data = {

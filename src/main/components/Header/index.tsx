@@ -1,62 +1,110 @@
-import logo from "../../../app/images/logo.png";
-import "./style.css";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setModal } from "../../store/stores/modal/modal.store";
+import { useDispatch } from "react-redux"
+import { Link } from "react-router-dom"
+import onLogout from "../../../main/store/stores/user/login.store.on-logout"
 import Button from '@mui/material/Button';
-import onLogout from "../../store/stores/user/login.store.on-logout"
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import "./style.css"
+import useGetUser from "../../hooks/useGetUser";
 
+const Header = () => {
 
-function Header() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const user = useGetUser()
 
+  const dispatch = useDispatch()
 
   const handleSubmit = () => {
     dispatch(onLogout())
   }
 
-  return (
-    <header>
 
-      <Button className="primary" color="secondary" variant="outlined" onClick={handleSubmit} sx={{
-      }}>Sign Out</Button>
+  if (user?.isDoctor) {
+    return (
+      <header className="header">
+        <nav className="nav_left">
+          <ul className="headerUl">
+            <Link to={`/`}>
+              <li className="headerli">
+                Home
+              </li>
+            </Link>
+          </ul>
 
-      {/* <nav className="navigation-header">
-        <ul className="logo-section">
-          <li className="logo-section__item">
-            <img src={logo} />
-            <h1>Medica+</h1>
-          </li>
-        </ul>
-        <ul className="login-section">
-          <li className="login-section__button">
-            <button
-              onClick={() => {
-                // setModal("sign-up");
-                dispatch(setModal("sign-up"));
-              }}
-            >
-              Sign Up
-            </button>
-          </li>
-          <li className="login-section__button">
-            <button
-              onClick={() => {
-                dispatch(setModal("log-in"));
-              }}
-            >
-              Log in
-            </button>
-          </li>
+        </nav>
+        <nav className="center_nav">
+          <ul className="headerUl">
+            <li className="headerli">
+            </li>
+          </ul>
 
-          <li className="login-section__info">
-            <h3>Hot Line +38344255255</h3>
-          </li>
-        </ul>
-      </nav> */}
-    </header>
-  );
+        </nav>
+        <nav className="nav_right">
+          <ul className="headerUl">
+
+            <Link to={`/doctor-profile`}>
+              <li className="headerli">
+                <AccountCircleIcon sx={{
+                  width: '2rem',
+                  marginBottom: "-0.4rem"
+                }} />
+              </li>
+            </Link>
+            <li className="headerli">
+              <Button className="primary" color="secondary" variant="outlined" onClick={handleSubmit} sx={{
+                color: "white",
+                borderColor: 'white'
+              }}>Sign Out</Button>
+            </li>
+          </ul>
+        </nav>
+
+      </header>
+    )
+  }
+  else {
+    return (
+      <header className="header">
+        <nav className="nav_left">
+          <ul className="headerUl">
+            <Link to={`/dashboard-user`}>
+              <li className="headerli">
+                Home
+              </li>
+            </Link>
+
+          </ul>
+
+        </nav>
+        <nav className="center_nav">
+          <ul className="headerUl">
+            <li className="headerli">
+
+            </li>
+          </ul>
+
+        </nav>
+        <nav className="nav_right">
+          <ul className="headerUl">
+
+            <Link to={`/user-profile`}>
+              <li className="headerli">
+                <AccountCircleIcon sx={{
+                  width: '2rem',
+                  marginBottom: "-0.4rem"
+                }} />
+              </li>
+            </Link>
+            <li className="headerli">
+              <Button className="primary" color="secondary" variant="outlined" onClick={handleSubmit} sx={{
+                color: "white",
+                borderColor: 'white'
+              }}>Sign Out</Button>
+            </li>
+          </ul>
+        </nav>
+
+      </header>
+    )
+  }
 }
-export default Header;
+
+export default Header
