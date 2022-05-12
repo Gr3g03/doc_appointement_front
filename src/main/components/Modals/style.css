@@ -8,6 +8,7 @@
   position: fixed;
   z-index: 20;
 }
+
 .modal-container {
   display: grid;
   background-color: var(--fourth-color);
@@ -17,40 +18,49 @@
   padding: 1rem;
   gap: 1rem;
 }
+
 .modal-header {
   display: grid;
   place-items: center;
 }
+
 .close-icon {
   position: absolute;
   top: 5px;
   right: 5px;
   cursor: pointer;
 }
+
 .modal-body {
   padding: 1rem;
 }
+
 .modal-header h2 {
   text-align: center;
 }
+
 .modal-body form {
   gap: 1rem;
   display: grid;
 }
+
 .modal-body form label {
   display: grid;
   gap: 0.5rem;
 }
+
 .modal-body form label input {
   padding: 0.4rem;
   width: 260px;
   border: none;
   border-radius: 5px;
 }
+
 .modal-body form label input:focus {
   border: none;
   outline: 2px solid var(--primary-color);
 }
+
 .modal-body form button {
   border: none;
   padding: 1rem;
@@ -59,10 +69,12 @@
   font-weight: bold;
   cursor: pointer;
 }
+
 .password-error,
 .email-error {
   color: red;
 }
+
 .admin_button {
   display: grid;
   grid-auto-flow: column;
@@ -71,12 +83,14 @@
   padding: unset;
   position: relative;
 }
+
 .admin_button img {
   width: 45px;
   border-radius: 50%;
   height: 45px;
   object-fit: cover;
 }
+
 .transition {
   transition: ease-in 0.5s;
 }

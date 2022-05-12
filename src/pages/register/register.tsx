@@ -1,17 +1,7 @@
-import { FC, useEffect, useState } from "react"
-import { useNavigate, Link } from "react-router-dom"
-import axios from "axios"
-import { RootState } from '../../main/store/redux/rootState'
-import { navigateTo } from "../../main/store/stores/navigation/navigation.store"
-import { useDispatch, useSelector } from "react-redux"
-import { setUser } from "../../main/store/stores/user/user.store"
+import { FC } from "react"
+import { useNavigate } from "react-router-dom"
+import { useDispatch } from "react-redux"
 import onRegister from "../../main/store/stores/user/register.store.on-register"
-import { useRadioGroup } from '@mui/material/RadioGroup';
-import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormLabel from '@mui/material/FormLabel';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -25,9 +15,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 
 const RegisterPage: FC = () => {
-
-
-    const navigate = useNavigate()
     const dispatch = useDispatch();
 
     const theme = createTheme({

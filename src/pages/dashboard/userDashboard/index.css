@@ -37,3 +37,15 @@
     padding: 0.5rem;
 
 }
+
+.DoctorSelect {
+    height: 50px;
+    text-align: center;
+}
+
+
+.calendar__ {
+    width: 500px;
+    color: rgb(2, 2, 24);
+    background-color: rgba(220, 20, 60, 0.87);
+}
