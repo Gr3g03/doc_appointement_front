@@ -4,12 +4,12 @@ import "./style.css";
 import AppointementModal from "./appointment/Appointment"
 
 
-function Modals() {
+function Modals({ selectedDate }: any) {
   const modal = useSelector((state: RootState) => state.modal);
 
   switch (modal) {
     case "appoinment":
-      return <AppointementModal />;
+      return <AppointementModal selectedDate={selectedDate} />;
     default:
       return null;
   }

@@ -7,51 +7,50 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
 import axios from "axios";
-import useGetUser from "../../../main/hooks/useGetUser";
-import IEvent from "../../../main/interfaces/IEvent";
 import AppointementModal from "../../../main/components/Modals/appointment/Appointment";
 import Modals from "../../../main/components/Modals";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setModal } from "../../../main/store/stores/modal/modal.store";
-import { useParams } from "react-router-dom";
-import IUserEvents from "../../../main/interfaces/IUserEvents";
 import IUser from "../../../main/interfaces/IUser";
-import { Calendar } from "@fullcalendar/core";
-
+import { RootState } from "../../../main/store/redux/rootState";
+import { setDoc } from "../../../main/store/stores/singleDoc/store.singleDoc";
 
 
 
 const UserDashboard: FC = () => {
 
     const [dataFromServer, setDataFromServer] = useState([])
-    const [singleDoc, setSingleDoc] = useState<IUser>(null)
+    const [selectedDate, SetSelectedDate,] = useState([])
     const dispatch = useDispatch()
-
-
 
     useEffect(() => {
         getDataFroServer()
     }, [])
 
+    // console.log(selectedDate)
+
     async function getDataFroServer() {
         let result = await (await axios.get(`doctors`)).data;
+        console.log(result)
         setDataFromServer(result)
     }
 
-
     const handleSelectedDoctor = (e: any) => {
-        const copyOfDoctorcs = [...dataFromServer]
-        const SelectedDoctor = copyOfDoctorcs.find(doctor => doctor.firstName === e.target.value)
-        setSingleDoc(SelectedDoctor)
+        let copyOfDoctorcs = [...dataFromServer]
+        let SelectedDoctor = copyOfDoctorcs.find(doctor => doctor.firstName === e.target.value)
+        dispatch(setDoc(SelectedDoctor))
     }
+
+    const getDoctor = useSelector((_state: RootState) => _state.doc)
 
 
     const handleEvent = () => {
 
-        if (singleDoc === null) return []
-        const INITIAL_EVENTS = []
-        for (const element of singleDoc?.acceptedAppointemets) {
-            const items = {
+        if (getDoctor === null) return
+        let INITIAL_EVENTS = []
+        for (const element of getDoctor?.acceptedAppointemets) {
+
+            const item = {
                 start: element.startDate,
                 end: element.endDate,
                 title: element.title,
@@ -61,7 +60,7 @@ const UserDashboard: FC = () => {
                 className: "calendar__",
                 textColor: "red"
             }
-            INITIAL_EVENTS.push(items)
+            INITIAL_EVENTS.push(item)
         }
         return INITIAL_EVENTS
     }
@@ -71,25 +70,44 @@ const UserDashboard: FC = () => {
     }
     let Final_event: any = handleEvent()
 
-    const handleDateSelect = (selectInfo: any) => {
-        dispatch(setModal('appoinment'))
-        let title = ('Please enter a new title for your event')
-        let calendarApi = selectInfo.view.calendar
-        calendarApi.unselect() // clear date selection
 
-        if (title) {
-            calendarApi.addEvent({
-                id: createEventId,
-                startDate: selectInfo.startDate,
-                endDate: selectInfo.endDate,
-                title: selectInfo.title,
-                description: selectInfo.description,
-                status: selectInfo.status,
-                user_id: selectInfo.user_id,
-                doctor_id: selectInfo.doctor_id,
-                allDay: false
-            })
+    // const handleDateSelect = (selectInfo: any) => {
+
+    //     if (getDoctor === null) {
+    //         dispatch(setModal(''))
+    //         alert("please selct a user")
+    //     } else {
+
+    //         dispatch(setModal('appoinment'))
+    //     }
+    //     let title = ('Please enter a new title for your event')
+    //     let calendarApi = selectInfo.view.calendar
+    //     calendarApi.unselect() // clear date selection
+
+    //     if (title) {
+    //         calendarApi.addEvent({
+    //             id: createEventId,
+    //             title,
+    //             start: selectInfo.startStr,
+    //             end: selectInfo.endStr,
+    //             allDay: selectInfo.allDay
+    //         })
+    //         console.log(calendarApi)
+
+    //     }
+    // }
+
+
+    const handleDateSelect = (selectInfo: any) => {
+
+        if (getDoctor === null) {
+            dispatch(setModal(''))
+            alert("please selct a user")
+        } else {
+
+            dispatch(setModal('appoinment'))
         }
+        SetSelectedDate(selectInfo)
     }
 
 
@@ -101,6 +119,7 @@ const UserDashboard: FC = () => {
     return (
         <main className="main_wrapper">
             <Header />
+
             <section className="user_main_dashboard">
                 <section className="calendar_Section">
                     <select className="DoctorSelect" defaultValue={'DEFAULT'}
@@ -133,6 +152,7 @@ const UserDashboard: FC = () => {
                         eventClick={handleEventClick}
                         droppable={true}
 
+
                     />
 
                 </section>
@@ -142,7 +162,7 @@ const UserDashboard: FC = () => {
 
 
             </section>
-
+            <Modals selectedDate={selectedDate} />
         </main>
 
     );

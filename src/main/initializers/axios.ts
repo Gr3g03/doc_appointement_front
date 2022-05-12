@@ -41,7 +41,7 @@ const axiosInit = async () => {
   axios.interceptors.request.use((request) => {
     const jwt = JwtManager.accessToken;
     if (jwt) {
-      request.headers["Authorization"] = `Bearer ${jwt}`;
+      request.headers["Authorization"] = jwt;
     }
     return request;
   });

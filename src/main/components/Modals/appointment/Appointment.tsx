@@ -2,58 +2,45 @@ import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { invalidateModal } from "../../../store/stores/modal/modal.store";
 import IEvent from "../../../interfaces/IEvent";
+import useGetUser from "../../../hooks/useGetUser";
+import { setDoc } from "../../../store/stores/singleDoc/store.singleDoc";
+import { RootState } from "../../../store/redux/rootState";
+import axios from "axios";
+import { setUser } from "../../../store/stores/user/user.store";
 
-// type Data = {
-//     fullName: string;
-//     email: string;
-//     password: string;
-//     avatar: string;
-// };
-function AppointementModal() {
+
+function AppointementModal({ selectedDate }: any) {
 
     const [error, setError] = useState("");
+    const [test, setTest] = useState<IEvent | null>(null);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const user = useGetUser()
 
-    // const register = (data: IEvent) => {
-    //     fetch("http://localhost:8000/register", {
-    //         method: "POST",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //         },
-    //         body: JSON.stringify(data),
-    //     })
-    //         .then((resp) => resp.json())
-    //         .then((data) => {
-    //             if (data.error) {
-    //                 setError("Email is already taken!");
-    //             } else {
-    //                 // setAdmin(data.admin);
-    //                 // setModal("success-new-admin");
-    //                 localStorage.setItem("token", data.token);
-    //                 navigate("/dashboard");
-    //             }
-    //         });
-    // };
-    // const handleSubmit = (e: any) => {
-    //     e.preventDefault();
-    //     const fullName = e.target.fullName.value;
-    //     const email = e.target.email.value;
-    //     const password = e.target.password.value;
-    //     const avatar = e.target.avatar.value;
-    //     const data = {
-    //         fullName,
-    //         email,
-    //         password,
-    //         avatar,
-    //     };
+    const getDoctor = useSelector((_state: RootState) => _state.doc)
 
-    //     register(data);
-    // };
 
+
+
+    const handleSubmit = async (e: any) => {
+        e.preventDefault()
+        const data = {
+            startDate: e.target.startDate.value,
+            endDate: e.target.endDate.value,
+            title: e.target.title.value,
+            description: e.target.description.value,
+            status: 'pending',
+            user_id: user?.id,
+            doctor_id: getDoctor?.id,
+        }
+        const newData = await (await axios.post(`appointements`, data)).data;
+        console.log(newData)
+        dispatch(setUser(newData))
+
+    }
     return (
         <div
             onClick={() => {
@@ -80,7 +67,7 @@ function AppointementModal() {
                 </header>
                 <main className="modal-body">
                     <form
-                    // onSubmit={handleSubmit}
+                        onSubmit={handleSubmit}
                     >
                         <label>
                             description
