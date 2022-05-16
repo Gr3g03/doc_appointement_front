@@ -1,4 +1,3 @@
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -9,33 +8,39 @@ import useGetUser from "../../../hooks/useGetUser";
 import { setDoc } from "../../../store/stores/singleDoc/store.singleDoc";
 import { RootState } from "../../../store/redux/rootState";
 import axios from "axios";
-import { setUser } from "../../../store/stores/user/user.store";
 
 
 function AppointementModal({ selectedDate }: any) {
 
     const [error, setError] = useState("");
-    const [test, setTest] = useState<IEvent | null>(null);
-    const navigate = useNavigate();
     const dispatch = useDispatch();
     const user = useGetUser()
 
     const getDoctor = useSelector((_state: RootState) => _state.doc)
 
+    const changeDate = (date: string) => {
+        return date.substring(0, date.length - 6);
+    };
+
+    if (selectedDate === undefined || null) return <h1></h1>
+    const ssss = selectedDate.startStr
+    console.log(ssss);
+
     const handleSubmit = async (e: any) => {
         e.preventDefault()
         const data = {
-            startDate: e.target.startDate.value,
-            endDate: e.target.endDate.value,
+            start: changeDate(selectedDate.startStr),
+            end: changeDate(selectedDate.endStr),
             title: e.target.title.value,
             description: e.target.description.value,
             status: 'pending',
             user_id: user?.id,
             doctor_id: getDoctor?.id,
+
         }
         const newData = await (await axios.post(`appointements`, data)).data;
-        console.log(newData)
-        dispatch(setUser(newData))
+        // dispatch(setUser(newData))
+        dispatch(setDoc(newData))
 
     }
     return (
@@ -87,18 +92,20 @@ function AppointementModal({ selectedDate }: any) {
                         <label>
                             start Date:
                             <input
-                                type="datetime-local"
+                                type="date-time"
                                 name="startDate"
                                 className="startDate"
                                 required
+                                defaultValue={changeDate(selectedDate.startStr)}
                             />
                         </label>
                         <label>
                             end Date:
                             <input
-                                type="datetime-local"
+                                type="date-time"
                                 name="endDate"
                                 className="endDate"
+                                defaultValue={changeDate(selectedDate.endStr)}
                                 required
                             />
                         </label>

@@ -1,37 +1,35 @@
 import { FC, useEffect, useState } from "react";
 import Header from "../../../main/components/Header/index";
 import "./index.css"
-import FullCalendar, { CalendarApi } from '@fullcalendar/react' // must go before plugins
+import FullCalendar, { DateSelectArg } from '@fullcalendar/react' // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
 import axios from "axios";
-import AppointementModal from "../../../main/components/Modals/appointment/Appointment";
 import Modals from "../../../main/components/Modals";
 import { useDispatch, useSelector } from "react-redux";
 import { setModal } from "../../../main/store/stores/modal/modal.store";
-import IUser from "../../../main/interfaces/IUser";
 import { RootState } from "../../../main/store/redux/rootState";
 import { setDoc } from "../../../main/store/stores/singleDoc/store.singleDoc";
+import useGetUser from "../../../main/hooks/useGetUser";
 
 
 
 const UserDashboard: FC = () => {
 
     const [dataFromServer, setDataFromServer] = useState([])
-    const [selectedDate, SetSelectedDate,] = useState(null)
+    const [selectedDate, SetSelectedDate,] = useState<DateSelectArg | null>(null)
+    const user = useGetUser()
+
     const dispatch = useDispatch()
 
     useEffect(() => {
         getDataFroServer()
     }, [])
 
-    // console.log(selectedDate)
-
     async function getDataFroServer() {
         let result = await (await axios.get(`doctors`)).data;
-        // console.log(result)
         setDataFromServer(result)
     }
 
@@ -41,56 +39,53 @@ const UserDashboard: FC = () => {
         dispatch(setDoc(SelectedDoctor))
     }
 
+    const todayDate = () => {
+        let today = new Date();
+        let dd = String(today.getDate()).padStart(2, "0");
+        let mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+        let yyyy = today.getFullYear();
+
+        const date = yyyy + "-" + mm + "-" + dd;
+        return date;
+    };
+
     const getDoctor = useSelector((_state: RootState) => _state.doc)
 
-
     const handleEvent = () => {
-        if (getDoctor === null) return
+        if (getDoctor === null) return []
         let INITIAL_EVENTS = []
         for (const element of getDoctor?.acceptedAppointemets) {
+            console.log(element);
+
 
             const item = {
-                start: element.startDate,
-                end: element.endDate,
+                start: element.start,
+                end: element.end,
                 title: element.title,
                 description: element.description,
                 status: element.status,
                 allDay: false,
                 className: "calendar__",
-                textColor: "red"
+                textColor: "red",
+                overlap: false
+
             }
             INITIAL_EVENTS.push(item)
         }
         return INITIAL_EVENTS
     }
 
-    let eventGuid = 0
-
-    function createEventId() {
-        return String(eventGuid++)
-    }
     let Final_event: any = handleEvent()
 
-
-    const handleDateSelect = (selectInfo: any) => {
-
+    const handleDateSelect = (selectInfo: DateSelectArg) => {
         let calendarApi = selectInfo.view.calendar;
-        calendarApi.changeView("timeGrid", selectInfo.startStr)
+        calendarApi.changeView("timeGridDay", selectInfo.startStr);
 
-        console.log(selectInfo.startStr)
-
-
-        if (getDoctor === null) {
-            dispatch(setModal(''))
-            alert("please selct a user")
-        } else {
-
+        if (selectInfo.view.type === "timeGridDay") {
+            SetSelectedDate(selectInfo);
             dispatch(setModal('appoinment'))
         }
-        SetSelectedDate(selectInfo)
-    }
-
-
+    };
 
     const handleEventClick = (clickInfo: any) => {
         if ((`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
@@ -121,24 +116,44 @@ const UserDashboard: FC = () => {
                         headerToolbar={{
                             left: 'prev,next today',
                             center: 'title',
-                            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                            right: 'dayGridMonth,timeGridWeek,timeGridDay',
+
                         }}
                         editable={true}
                         selectable={true}
                         selectMirror={true}
                         dayMaxEvents={true}
                         events={Final_event}
-                        select={handleDateSelect}
+                        displayEventEnd={true}
+                        weekends={false}
                         eventDurationEditable={true}
+                        select={handleDateSelect}
                         eventClick={handleEventClick}
                         droppable={true}
-
-
+                        validRange={{ start: todayDate(), end: "2023-01-01" }}
+                        selectOverlap={true}
+                        height="750px"
                     />
 
                 </section>
                 <section className="left_section">
-                    <h3>booked Appointements</h3>
+                    <h3>My Events</h3>
+
+                    <table className="table__" >
+                        <tr className="tr__">
+                            <th >Day</th>
+                            <th >Description</th>
+                            <th >Status</th>
+                        </tr>
+                        {user.postedAppointements.map((data) =>
+                            //@ts-ignore
+                            <tr className="tr__" key={data.id}>
+                                <td className="th__" >{data.start}</td>
+                                <td className="th__">{data.description}</td>
+                                <td className="th__" >{data.status} </td>
+                            </tr>
+                        )}
+                    </table>
                 </section>
 
 

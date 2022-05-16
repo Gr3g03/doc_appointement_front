@@ -22,23 +22,20 @@
 }
 
 
-/* .calendar_doctor_main_dashboard {
-    display: grid;
-    border: 1px solid black;
-    box-shadow: 0px 10px 18px -9px rgb(0, 0, 0);
-    height: 100vh;
-    padding: 0.5rem;
 
-} */
-
-
-.left_section_doctor {
-    display: grid;
+.Doctor_left_section {
     box-shadow: 0px 10px 18px -9px rgb(0, 0, 0);
     height: 100vh;
     border: 1px solid black;
     padding: 0.5rem;
 
+}
+
+.table__ {
+    width: 100%;
+    text-align: center;
+    padding: 0.2rem;
+    margin-top: 0.2rem;
 }
 
 .DoctorSelect {
@@ -48,7 +45,26 @@
 
 
 .calendar__ {
-    width: 500px;
+    width: max-content;
     color: rgb(2, 2, 24);
     background-color: rgba(220, 20, 60, 0.87);
+}
+
+.table__ {
+    border: 0.1px solid rgb(163, 162, 161);
+    font-weight: 300;
+}
+
+.tr__ {
+    border: 0.1px solid rgb(163, 162, 161);
+    font-weight: 300;
+}
+
+.th__ {
+    border: 0.1px solid rgb(163, 162, 161);
+    font-weight: 300;
+}
+
+.status_class {
+    border: none;
 }

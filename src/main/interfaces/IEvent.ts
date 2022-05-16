@@ -1,7 +1,7 @@
 interface IEvent {
     id?: Number,
-    startDate: String,
-    endDate: String,
+    start: String,
+    end: String,
     title: String,
     description: String
     status: String,
