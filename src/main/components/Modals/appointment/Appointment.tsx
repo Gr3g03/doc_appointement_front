@@ -22,9 +22,6 @@ function AppointementModal({ selectedDate }: any) {
 
     const getDoctor = useSelector((_state: RootState) => _state.doc)
 
-
-
-
     const handleSubmit = async (e: any) => {
         e.preventDefault()
         const data = {
@@ -105,6 +102,7 @@ function AppointementModal({ selectedDate }: any) {
                                 required
                             />
                         </label>
+
                         {error !== "" ? <span className="email-error">{error}</span> : null}
                         <button type="submit">book</button>
                     </form>

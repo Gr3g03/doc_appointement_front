@@ -1,0 +1,54 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.doctor_dashboard_main_wrapper {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    height: 100vh;
+    overflow: hidden;
+
+}
+
+.calendar_doctor_main_dashboard {
+    display: grid;
+    margin-top: 5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+
+}
+
+
+/* .calendar_doctor_main_dashboard {
+    display: grid;
+    border: 1px solid black;
+    box-shadow: 0px 10px 18px -9px rgb(0, 0, 0);
+    height: 100vh;
+    padding: 0.5rem;
+
+} */
+
+
+.left_section_doctor {
+    display: grid;
+    box-shadow: 0px 10px 18px -9px rgb(0, 0, 0);
+    height: 100vh;
+    border: 1px solid black;
+    padding: 0.5rem;
+
+}
+
+.DoctorSelect {
+    height: 50px;
+    text-align: center;
+}
+
+
+.calendar__ {
+    width: 500px;
+    color: rgb(2, 2, 24);
+    background-color: rgba(220, 20, 60, 0.87);
+}

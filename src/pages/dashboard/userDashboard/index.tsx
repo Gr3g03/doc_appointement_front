@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import Header from "../../../main/components/Header/index";
 import "./index.css"
-import FullCalendar from '@fullcalendar/react' // must go before plugins
+import FullCalendar, { CalendarApi } from '@fullcalendar/react' // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
@@ -20,7 +20,7 @@ import { setDoc } from "../../../main/store/stores/singleDoc/store.singleDoc";
 const UserDashboard: FC = () => {
 
     const [dataFromServer, setDataFromServer] = useState([])
-    const [selectedDate, SetSelectedDate,] = useState([])
+    const [selectedDate, SetSelectedDate,] = useState(null)
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -31,7 +31,7 @@ const UserDashboard: FC = () => {
 
     async function getDataFroServer() {
         let result = await (await axios.get(`doctors`)).data;
-        console.log(result)
+        // console.log(result)
         setDataFromServer(result)
     }
 
@@ -45,7 +45,6 @@ const UserDashboard: FC = () => {
 
 
     const handleEvent = () => {
-
         if (getDoctor === null) return
         let INITIAL_EVENTS = []
         for (const element of getDoctor?.acceptedAppointemets) {
@@ -64,41 +63,22 @@ const UserDashboard: FC = () => {
         }
         return INITIAL_EVENTS
     }
+
     let eventGuid = 0
+
     function createEventId() {
         return String(eventGuid++)
     }
     let Final_event: any = handleEvent()
 
 
-    // const handleDateSelect = (selectInfo: any) => {
-
-    //     if (getDoctor === null) {
-    //         dispatch(setModal(''))
-    //         alert("please selct a user")
-    //     } else {
-
-    //         dispatch(setModal('appoinment'))
-    //     }
-    //     let title = ('Please enter a new title for your event')
-    //     let calendarApi = selectInfo.view.calendar
-    //     calendarApi.unselect() // clear date selection
-
-    //     if (title) {
-    //         calendarApi.addEvent({
-    //             id: createEventId,
-    //             title,
-    //             start: selectInfo.startStr,
-    //             end: selectInfo.endStr,
-    //             allDay: selectInfo.allDay
-    //         })
-    //         console.log(calendarApi)
-
-    //     }
-    // }
-
-
     const handleDateSelect = (selectInfo: any) => {
+
+        let calendarApi = selectInfo.view.calendar;
+        calendarApi.changeView("timeGrid", selectInfo.startStr)
+
+        console.log(selectInfo.startStr)
+
 
         if (getDoctor === null) {
             dispatch(setModal(''))
@@ -109,6 +89,7 @@ const UserDashboard: FC = () => {
         }
         SetSelectedDate(selectInfo)
     }
+
 
 
     const handleEventClick = (clickInfo: any) => {
