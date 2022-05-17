@@ -37,11 +37,14 @@ function AppointementModal({ selectedDate }: any) {
             user_id: user?.id,
             doctor_id: getDoctor?.id,
         }
-        const newData = await (await axios.post(`appointements`, data)).data;
-        dispatch(setUser(newData))
-        dispatch(setDoc(newData))
+        const userFromServer = await (await axios.post("appointements", data)).data;
 
-    }
+        if (!userFromServer.error) {
+            dispatch(setDoc(userFromServer.updatedDoctor));
+            dispatch(setUser(userFromServer.updatedUser));
+        }
+    };
+
     return (
         <div
             onClick={() => {

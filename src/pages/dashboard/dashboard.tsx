@@ -29,6 +29,9 @@ const Dashboard: FC = () => {
 
   const dispatch = useDispatch()
 
+  console.log(user.acceptedAppointemets)
+
+
   const handleSubmit = async (e: any, project_id: any) => {
     const data = {
       status: e.target.value
@@ -47,7 +50,7 @@ const Dashboard: FC = () => {
     if (user === null) return
     let INITIAL_EVENTS = []
     for (const element of user?.acceptedAppointemets) {
-
+      console.log(element)
       const item = {
         start: element.start,
         end: element.end,
@@ -84,12 +87,19 @@ const Dashboard: FC = () => {
     }
   };
 
+  const handleEventClick = (clickInfo: any) => {
+    if ((`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
+      clickInfo.event.remove()
+    }
+  }
+
   const handleDelte = async (id: any) => {
     const newData = await (await axios.delete(`deleteApp/${id}`)).data;
     if (!newData) {
       dispatch(setDoc(newData));
       dispatch(setUser(newData));
     }
+
   }
   let Final_event: any = handleEvent()
 
@@ -130,8 +140,8 @@ const Dashboard: FC = () => {
             weekends={false}
             height="750px"
             validRange={{ start: todayDate(), end: "2023-01-01" }}
-            select={handleDateSelect}
-
+          // select={handleDateSelect}
+          // eventClick={handleEventClick}
           />
 
         </section>
@@ -173,7 +183,7 @@ const Dashboard: FC = () => {
 
 
       </section>
-      <Modals selectedDate={selectedDate} />
+      {/* <Modals selectedDate={selectedDate} /> */}
 
     </main>
   );

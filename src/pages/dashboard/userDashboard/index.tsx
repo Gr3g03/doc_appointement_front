@@ -33,9 +33,13 @@ const UserDashboard: FC = () => {
         setDataFromServer(result)
     }
 
+    const getSingleDoc = user.acceptedAppointemets.filter(data => data.doctor_id !== user.id)
+    console.log(getSingleDoc);
+
+
     const handleSelectedDoctor = (e: any) => {
         let copyOfDoctorcs = [...dataFromServer]
-        let SelectedDoctor = copyOfDoctorcs.find(doctor => doctor.firstName === e.target.value)
+        let SelectedDoctor = copyOfDoctorcs.find(doctor => doctor.firstName === e.target.value && doctor.doctor_id !== user.id)
         dispatch(setDoc(SelectedDoctor))
     }
 
@@ -52,7 +56,8 @@ const UserDashboard: FC = () => {
     const handleEvent = () => {
         if (getDoctor === null) return []
         let INITIAL_EVENTS = []
-        for (const element of getDoctor?.acceptedAppointemets) {
+        for (const element of getDoctor.acceptedAppointemets) {
+            console.log(element)
             let color = null
             if (element.user_id === user.id) {
                 color = "#1F43FA"
