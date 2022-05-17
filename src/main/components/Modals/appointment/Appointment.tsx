@@ -6,7 +6,6 @@ import useGetUser from "../../../hooks/useGetUser";
 import { setDoc } from "../../../store/stores/singleDoc/store.singleDoc";
 import { RootState } from "../../../store/redux/rootState";
 import axios from "axios";
-import { setEvent } from "../../../store/stores/event/event.store";
 import { setUser } from "../../../store/stores/user/user.store";
 
 
@@ -23,8 +22,6 @@ function AppointementModal({ selectedDate }: any) {
     };
 
     if (selectedDate === undefined || null) return <h1></h1>
-    const ssss = selectedDate.startStr
-    console.log(ssss);
 
     const handleSubmit = async (e: any) => {
         e.preventDefault()

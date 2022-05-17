@@ -44,25 +44,47 @@
 
 
 .calendar__ {
-    color: rgb(2, 2, 24);
-    background-color: rgba(220, 20, 60, 0.87);
+    /* background-color: red; */
+    border-radius: 8px;
+    height: 25px;
+    padding: 0.2rem;
 }
 
 .table__ {
     border: 0.1px solid rgb(163, 162, 161);
+    font-family: sans-serif;
     font-weight: 300;
 }
 
 .tr__ {
     border: 0.1px solid rgb(163, 162, 161);
+    font-family: sans-serif;
+
     font-weight: 300;
 }
 
 .th__ {
     border: 0.1px solid rgb(163, 162, 161);
-    font-weight: 300;
+    font-weight: 100;
+    font-family: sans-serif;
+    border-radius: 6px;
+    padding: 0.3rem;
+
 }
 
 .status_class {
     border: none;
+}
+
+._th {
+    font-weight: 300;
+    padding: 0.5rem;
+
+
+}
+
+
+.option2 {
+    background-color: rgb(47, 211, 47);
+
 }

@@ -1,6 +1,6 @@
 import FullCalendar, { DateSelectArg } from "@fullcalendar/react";
 import { FC, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Header from "../../main/components/Header/index";
 import useGetUser from "../../main/hooks/useGetUser";
 import "./dashboardd.css"
@@ -11,10 +11,10 @@ import interactionPlugin from '@fullcalendar/interaction';
 import axios from "axios";
 import { setDoc } from "../../main/store/stores/singleDoc/store.singleDoc";
 import { useDispatch } from "react-redux";
-import { setEvent } from "../../main/store/stores/event/event.store";
 import { setUser } from "../../main/store/stores/user/user.store";
 import { setModal } from "../../main/store/stores/modal/modal.store";
 import Modals from "../../main/components/Modals";
+import { setEvent } from "../../main/store/stores/event/event.store";
 
 
 
@@ -29,15 +29,13 @@ const Dashboard: FC = () => {
 
   const dispatch = useDispatch()
 
-  console.log(user.acceptedAppointemets)
-
 
   const handleSubmit = async (e: any, project_id: any) => {
     const data = {
       status: e.target.value
     }
     const newData = await (await axios.put(`appointement/${project_id}`, data)).data;
-    setStatus(newData)
+    dispatch(setEvent(newData))
     dispatch(setDoc(newData))
 
     if (newData === "delete") {
@@ -49,8 +47,19 @@ const Dashboard: FC = () => {
   const handleEvent = () => {
     if (user === null) return
     let INITIAL_EVENTS = []
-    for (const element of user?.acceptedAppointemets) {
-      console.log(element)
+    for (const element of user.acceptedAppointemets) {
+      let color = "";
+      switch (element.status) {
+        case "confirmed":
+          color = "#39c32f";
+          break;
+        case "pending":
+          color = "#d01212";
+          break;
+        default:
+          color = "#fc9605";
+
+      }
       const item = {
         start: element.start,
         end: element.end,
@@ -58,8 +67,12 @@ const Dashboard: FC = () => {
         description: element.description,
         status: element.status,
         allDay: false,
-        className: "calendar__",
-        overlap: false
+        className: `${user.id === element.user_id ? "colors" : `${element.status}`
+          }`,
+        backgroundColor: `${user.id === element.user_id ? color : "#FA1F1F"}`,
+        overlap: false,
+
+
 
       }
       INITIAL_EVENTS.push(item)
@@ -90,17 +103,19 @@ const Dashboard: FC = () => {
   const handleEventClick = (clickInfo: any) => {
     if ((`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
       clickInfo.event.remove()
+
     }
   }
 
   const handleDelte = async (id: any) => {
     const newData = await (await axios.delete(`deleteApp/${id}`)).data;
     if (!newData) {
-      dispatch(setDoc(newData));
-      dispatch(setUser(newData));
+      dispatch(setDoc(newData.updatedDoctor));
+      dispatch(setUser(newData.updatedUser));
     }
 
   }
+
   let Final_event: any = handleEvent()
 
 
@@ -109,7 +124,7 @@ const Dashboard: FC = () => {
       navigate('/dashboard-user')
     }
     if (user.acceptedAppointemets.filter((event) => event.status.includes('pending')).length > 0) {
-      alert(" you have a new appointemet")
+      dispatch(setModal('notification'))
     }
   }, [])
 
@@ -140,8 +155,8 @@ const Dashboard: FC = () => {
             weekends={false}
             height="750px"
             validRange={{ start: todayDate(), end: "2023-01-01" }}
-          // select={handleDateSelect}
-          // eventClick={handleEventClick}
+            // select={handleDateSelect}
+            eventClick={handleEventClick}
           />
 
         </section>
@@ -150,9 +165,9 @@ const Dashboard: FC = () => {
           <table className="table__" >
             <tbody>
               <tr className="tr__">
-                <th >Day</th>
-                <th >Description</th>
-                <th >Status</th>
+                <th className="_th" >Day</th>
+                <th className="_th">Description</th>
+                <th className="_th">Status</th>
               </tr>
               {user.acceptedAppointemets.map(data =>
 
@@ -163,10 +178,10 @@ const Dashboard: FC = () => {
                   <td className="th__" >
                     <select className="status_class" name="changeStatus" onChange={(e) => {
                       handleSubmit(e, data.id)
-                    }} id="">
+                    }} >
 
-                      <option >{data?.status}</option>
-                      <option value="completed">completed</option>
+                      <option  >{data?.status}</option>
+                      <option className="option2" value="completed">completed</option>
                     </select> <button onClick={() => {
                       handleDelte(data.id);
                     }}>x</button>
@@ -177,13 +192,40 @@ const Dashboard: FC = () => {
             </tbody>
           </table>
 
-          <h3>Notifications</h3>
+          <ul className="event-list">
+            <li>
+              <h4>
+                events <span> {user.acceptedAppointemets.length}</span>
+              </h4>
+            </li>
+            <li className="event-list__item pending">
+              Pending:
+              <span>
+                {
+                  user.acceptedAppointemets.filter((event) =>
+                    event.status.includes("pending")
+                  ).length
+                }
+              </span>
+            </li>
+            <li className="event-list__item completed">
+              Approved
+              <span>
+                {
+                  user.acceptedAppointemets.filter((event) =>
+                    event.status.includes("completed")
+                  ).length
+                }
+
+              </span>
+            </li>
+          </ul>
 
         </section>
 
 
       </section>
-      {/* <Modals selectedDate={selectedDate} /> */}
+      <Modals selectedDate={selectedDate} />
 
     </main>
   );

@@ -2,6 +2,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: sans-serif;
+
 }
 
 .main_wrapper {
@@ -44,5 +46,41 @@
 
 
 .colors {
-    background-color: var(--secondary-color);
+    background-color: red;
+    border-radius: 8px;
+    height: 25px;
+    padding: 0.2rem;
+}
+
+
+.event-list {
+    display: grid;
+    gap: 0.2rem;
+    margin-top: 1rem;
+    list-style: none;
+    text-align: center;
+}
+
+.event-list li {
+    width: 300px;
+    justify-items: center;
+    margin-left: 150px;
+    font-family: sans-serif;
+
+}
+
+.pending {
+    background-color: rgb(253, 204, 42);
+    border-radius: 8px;
+    border-radius: 8px;
+    height: 25px;
+    padding: 0.2rem;
+
+}
+
+.completed {
+    padding: 0.2rem;
+    background-color: rgb(47, 211, 47);
+    border-radius: 8px;
+    height: 25px;
 }

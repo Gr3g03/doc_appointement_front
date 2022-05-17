@@ -33,9 +33,6 @@ const UserDashboard: FC = () => {
         setDataFromServer(result)
     }
 
-    const getSingleDoc = user.acceptedAppointemets.filter(data => data.doctor_id !== user.id)
-    console.log(getSingleDoc);
-
 
     const handleSelectedDoctor = (e: any) => {
         let copyOfDoctorcs = [...dataFromServer]
@@ -57,16 +54,18 @@ const UserDashboard: FC = () => {
         if (getDoctor === null) return []
         let INITIAL_EVENTS = []
         for (const element of getDoctor.acceptedAppointemets) {
-            console.log(element)
-            let color = null
-            if (element.user_id === user.id) {
-                color = "#1F43FA"
-            }
-            else {
-                color = "#FA1F1F"
-            }
+            let color = "";
+            switch (element.status) {
+                case "confirmed":
+                    color = "#39c32f";
+                    break;
+                case "pending":
+                    color = "#d01212";
+                    break;
+                default:
+                    color = "#fc9605";
 
-
+            }
             const item = {
                 start: element.start,
                 end: element.end,
@@ -77,13 +76,16 @@ const UserDashboard: FC = () => {
                 className: `${user.id === element.user_id ? "colors" : `${element.status}`
                     }`,
                 backgroundColor: `${user.id === element.user_id ? color : "#FA1F1F"}`,
-                overlap: false
+                overlap: false,
+
+
 
             }
             INITIAL_EVENTS.push(item)
         }
         return INITIAL_EVENTS
     }
+
 
     let Final_event: any = handleEvent()
 
@@ -102,6 +104,15 @@ const UserDashboard: FC = () => {
             clickInfo.event.remove()
         }
     }
+
+    const busines = [
+        {
+            daysOfWeek: [1, 2, 3, 4, 5],
+            startTime: '08:00',
+            endTime: '18:00'
+        }
+    ]
+
     return (
         <main className="main_wrapper">
             <Header />
@@ -135,7 +146,7 @@ const UserDashboard: FC = () => {
                         dayMaxEvents={true}
                         events={Final_event}
                         displayEventEnd={true}
-                        weekends={false}
+                        // weekends={false}
                         eventDurationEditable={true}
                         select={handleDateSelect}
                         eventClick={handleEventClick}
@@ -143,6 +154,7 @@ const UserDashboard: FC = () => {
                         validRange={{ start: todayDate(), end: "2023-01-01" }}
                         selectOverlap={true}
                         height="750px"
+                        businessHours={busines}
                     />
 
                 </section>
@@ -161,13 +173,40 @@ const UserDashboard: FC = () => {
                                 <tr className="tr__" key={data.id}>
                                     <td className="th__" >{data.start}</td>
                                     <td className="th__">{data.description}</td>
-                                    <td className="th__" >{data.status} </td>
+                                    <td className="th__ " >{data.status} </td>
                                 </tr>
                             )}
                         </tbody>
                     </table>
 
+                    <ul className="event-list">
+                        <li>
+                            <h4>
+                                events <span> {user.postedAppointements.length}</span>
+                            </h4>
+                        </li>
+                        <li className="event-list__item pending">
+                            Pending
+                            <span>
+                                {
+                                    user.postedAppointements.filter((event) =>
+                                        event.status.includes("pending")
+                                    ).length
+                                }
+                            </span>
+                        </li>
+                        <li className="event-list__item completed">
+                            Approved
+                            <span>
+                                {
+                                    user.postedAppointements.filter((event) =>
+                                        event.status.includes("completed")
+                                    ).length
+                                }
 
+                            </span>
+                        </li>
+                    </ul>
                 </section>
 
 
