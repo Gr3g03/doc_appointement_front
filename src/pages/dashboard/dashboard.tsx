@@ -13,6 +13,7 @@ import axios from "axios";
 import { setDoc } from "../../main/store/stores/singleDoc/store.singleDoc";
 import { useDispatch } from "react-redux";
 import IEvent from "../../main/interfaces/IEvent";
+import { setEvent } from "../../main/store/stores/event/event.store";
 
 
 
@@ -20,10 +21,10 @@ const Dashboard: FC = () => {
 
   const user = useGetUser()
   const navigate = useNavigate()
+  const [status, setStatus] = useState<any | null>(null)
 
 
   const dispatch = useDispatch()
-  const [status, setStatus] = useState<any | null>(null)
 
   const handleSubmit = async (e: any, project_id: any) => {
     const data = {
@@ -32,6 +33,10 @@ const Dashboard: FC = () => {
     const newData = await (await axios.put(`appointement/${project_id}`, data)).data;
     setStatus(newData)
     dispatch(setDoc(newData))
+
+    if (newData === "delete") {
+
+    }
 
   }
 
@@ -48,20 +53,43 @@ const Dashboard: FC = () => {
         status: element.status,
         allDay: false,
         className: "calendar__",
+        overlap: false
+
       }
       INITIAL_EVENTS.push(item)
     }
     return INITIAL_EVENTS
   }
 
+  const todayDate = () => {
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, "0");
+    let mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    let yyyy = today.getFullYear();
 
-  console.log(status);
+    const date = yyyy + "-" + mm + "-" + dd;
+    return date;
+  };
 
 
   const handleDelte = (id: any) => {
-    const newList = status.filter((item: any) => item.id !== id)
-    setStatus(newList)
+    const newData = axios.delete(`deleteApp/${id}`);
+    setStatus(newData)
+    // dispatch(setDoc(newData))
   }
+
+
+  // const eventCopy = user.acceptedAppointemets
+  const checkEvents = [...user.acceptedAppointemets]
+
+  // console.log(eventCopy);
+
+
+  // if (checkEvents. !== checkEvents.length) {
+  //   alert('you hava a new Appointement')
+  // }
+
+
 
   let Final_event: any = handleEvent()
 
@@ -70,7 +98,13 @@ const Dashboard: FC = () => {
     if (!user.isDoctor) {
       navigate('/dashboard-user')
     }
+    if (user.acceptedAppointemets.filter((event) => event.status.includes('pending')).length > 0) {
+      alert(" you have a new appointemet")
+    }
   }, [])
+
+
+
 
   return (
     <main className="main_wrapper">
@@ -94,6 +128,11 @@ const Dashboard: FC = () => {
             events={Final_event}
             droppable={true}
             eventDurationEditable={true}
+            selectOverlap={true}
+            displayEventEnd={true}
+            weekends={false}
+            height="750px"
+            validRange={{ start: todayDate(), end: "2023-01-01" }}
           />
 
         </section>
@@ -106,6 +145,7 @@ const Dashboard: FC = () => {
               <th >Status</th>
             </tr>
             {user.acceptedAppointemets.map(data =>
+
               //@ts-ignore
               <tr className="tr__" key={data.id}>
                 <td className="th__" >{data.start}</td>
@@ -115,16 +155,21 @@ const Dashboard: FC = () => {
                     handleSubmit(e, data.id)
                   }} id="">
 
-                    <option value="pending">{data?.status}</option>
-                    <option value="active">active</option>
-                    <option value="delete" onClick={() => {
-                      handleDelte(data.id)
-                    }}>delete</option>
-                  </select>
+                    <option >{data?.status}</option>
+                    <option value="completed">completed</option>
+                  </select> <button onClick={() => {
+                    handleDelte(data.id);
+                    //@ts-ignore
+                    setEvent(user.acceptedAppointemets.filter((b: any) => b.id !== data.id));
+                  }}>x</button>
                 </td>
               </tr>
+
             )}
           </table>
+
+          <h3>Notifications</h3>
+
         </section>
 
 

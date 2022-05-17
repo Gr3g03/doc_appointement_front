@@ -26,7 +26,6 @@
 .Doctor_left_section {
     box-shadow: 0px 10px 18px -9px rgb(0, 0, 0);
     height: 100vh;
-    border: 1px solid black;
     padding: 0.5rem;
 
 }
@@ -45,7 +44,6 @@
 
 
 .calendar__ {
-    width: max-content;
     color: rgb(2, 2, 24);
     background-color: rgba(220, 20, 60, 0.87);
 }

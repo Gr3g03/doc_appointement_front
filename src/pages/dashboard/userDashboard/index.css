@@ -41,3 +41,8 @@
     margin-bottom: 0.5rem;
     font-weight: 300;
 }
+
+
+.colors {
+    background-color: var(--secondary-color);
+}

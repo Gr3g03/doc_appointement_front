@@ -20,8 +20,8 @@ const UserDashboard: FC = () => {
 
     const [dataFromServer, setDataFromServer] = useState([])
     const [selectedDate, SetSelectedDate,] = useState<DateSelectArg | null>(null)
+    const getDoctor = useSelector((_state: RootState) => _state.doc)
     const user = useGetUser()
-
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -49,13 +49,18 @@ const UserDashboard: FC = () => {
         return date;
     };
 
-    const getDoctor = useSelector((_state: RootState) => _state.doc)
 
     const handleEvent = () => {
         if (getDoctor === null) return []
         let INITIAL_EVENTS = []
         for (const element of getDoctor?.acceptedAppointemets) {
-            console.log(element);
+            let color = null
+            if (element.user_id === user.id) {
+                color = "#1F43FA"
+            }
+            else {
+                color = "#FA1F1F"
+            }
 
 
             const item = {
@@ -65,8 +70,9 @@ const UserDashboard: FC = () => {
                 description: element.description,
                 status: element.status,
                 allDay: false,
-                className: "calendar__",
-                textColor: "red",
+                className: `${user.id === element.user_id ? "colors" : `${element.status}`
+                    }`,
+                backgroundColor: `${user.id === element.user_id ? color : "#FA1F1F"}`,
                 overlap: false
 
             }
@@ -154,6 +160,8 @@ const UserDashboard: FC = () => {
                             </tr>
                         )}
                     </table>
+
+
                 </section>
 
 

@@ -1,13 +1,12 @@
 import CloseIcon from "@mui/icons-material/Close";
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { invalidateModal } from "../../../store/stores/modal/modal.store";
-import IEvent from "../../../interfaces/IEvent";
 import useGetUser from "../../../hooks/useGetUser";
 import { setDoc } from "../../../store/stores/singleDoc/store.singleDoc";
 import { RootState } from "../../../store/redux/rootState";
 import axios from "axios";
+import { setEvent } from "../../../store/stores/event/event.store";
 
 
 function AppointementModal({ selectedDate }: any) {
@@ -36,11 +35,9 @@ function AppointementModal({ selectedDate }: any) {
             status: 'pending',
             user_id: user?.id,
             doctor_id: getDoctor?.id,
-
         }
         const newData = await (await axios.post(`appointements`, data)).data;
-        // dispatch(setUser(newData))
-        dispatch(setDoc(newData))
+        dispatch(setEvent(newData))
 
     }
     return (
