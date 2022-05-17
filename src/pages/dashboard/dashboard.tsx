@@ -1,4 +1,4 @@
-import FullCalendar from "@fullcalendar/react";
+import FullCalendar, { DateSelectArg } from "@fullcalendar/react";
 import { FC, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Header from "../../main/components/Header/index";
@@ -8,12 +8,14 @@ import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
-import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
 import axios from "axios";
 import { setDoc } from "../../main/store/stores/singleDoc/store.singleDoc";
 import { useDispatch } from "react-redux";
-import IEvent from "../../main/interfaces/IEvent";
 import { setEvent } from "../../main/store/stores/event/event.store";
+import { setUser } from "../../main/store/stores/user/user.store";
+import { setModal } from "../../main/store/stores/modal/modal.store";
+import Modals from "../../main/components/Modals";
+
 
 
 
@@ -22,6 +24,7 @@ const Dashboard: FC = () => {
   const user = useGetUser()
   const navigate = useNavigate()
   const [status, setStatus] = useState<any | null>(null)
+  const [selectedDate, SetSelectedDate,] = useState<DateSelectArg | null>(null)
 
 
   const dispatch = useDispatch()
@@ -71,26 +74,23 @@ const Dashboard: FC = () => {
     return date;
   };
 
+  const handleDateSelect = (selectInfo: DateSelectArg) => {
+    let calendarApi = selectInfo.view.calendar;
+    calendarApi.changeView("timeGridDay", selectInfo.startStr);
 
-  const handleDelte = (id: any) => {
-    const newData = axios.delete(`deleteApp/${id}`);
-    setStatus(newData)
-    // dispatch(setDoc(newData))
+    if (selectInfo.view.type === "timeGridDay") {
+      SetSelectedDate(selectInfo);
+      dispatch(setModal('appoinment'))
+    }
+  };
+
+  const handleDelte = async (id: any) => {
+    const newData = await (await axios.delete(`deleteApp/${id}`)).data;
+    if (!newData) {
+      dispatch(setDoc(newData));
+      dispatch(setUser(newData));
+    }
   }
-
-
-  // const eventCopy = user.acceptedAppointemets
-  const checkEvents = [...user.acceptedAppointemets]
-
-  // console.log(eventCopy);
-
-
-  // if (checkEvents. !== checkEvents.length) {
-  //   alert('you hava a new Appointement')
-  // }
-
-
-
   let Final_event: any = handleEvent()
 
 
@@ -102,9 +102,6 @@ const Dashboard: FC = () => {
       alert(" you have a new appointemet")
     }
   }, [])
-
-
-
 
   return (
     <main className="main_wrapper">
@@ -133,39 +130,41 @@ const Dashboard: FC = () => {
             weekends={false}
             height="750px"
             validRange={{ start: todayDate(), end: "2023-01-01" }}
+            select={handleDateSelect}
+
           />
 
         </section>
         <section className="Doctor_left_section">
 
           <table className="table__" >
-            <tr className="tr__">
-              <th >Day</th>
-              <th >Description</th>
-              <th >Status</th>
-            </tr>
-            {user.acceptedAppointemets.map(data =>
-
-              //@ts-ignore
-              <tr className="tr__" key={data.id}>
-                <td className="th__" >{data.start}</td>
-                <td className="th__">{data.description}</td>
-                <td className="th__" >
-                  <select className="status_class" name="changeStatus" onChange={(e) => {
-                    handleSubmit(e, data.id)
-                  }} id="">
-
-                    <option >{data?.status}</option>
-                    <option value="completed">completed</option>
-                  </select> <button onClick={() => {
-                    handleDelte(data.id);
-                    //@ts-ignore
-                    setEvent(user.acceptedAppointemets.filter((b: any) => b.id !== data.id));
-                  }}>x</button>
-                </td>
+            <tbody>
+              <tr className="tr__">
+                <th >Day</th>
+                <th >Description</th>
+                <th >Status</th>
               </tr>
+              {user.acceptedAppointemets.map(data =>
 
-            )}
+                //@ts-ignore
+                <tr className="tr__" key={data.id}>
+                  <td className="th__" >{data.start}</td>
+                  <td className="th__">{data.description}</td>
+                  <td className="th__" >
+                    <select className="status_class" name="changeStatus" onChange={(e) => {
+                      handleSubmit(e, data.id)
+                    }} id="">
+
+                      <option >{data?.status}</option>
+                      <option value="completed">completed</option>
+                    </select> <button onClick={() => {
+                      handleDelte(data.id);
+                    }}>x</button>
+                  </td>
+                </tr>
+
+              )}
+            </tbody>
           </table>
 
           <h3>Notifications</h3>
@@ -174,6 +173,8 @@ const Dashboard: FC = () => {
 
 
       </section>
+      <Modals selectedDate={selectedDate} />
+
     </main>
   );
 };

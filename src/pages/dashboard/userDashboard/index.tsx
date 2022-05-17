@@ -49,7 +49,6 @@ const UserDashboard: FC = () => {
         return date;
     };
 
-
     const handleEvent = () => {
         if (getDoctor === null) return []
         let INITIAL_EVENTS = []
@@ -146,19 +145,21 @@ const UserDashboard: FC = () => {
                     <h3>My Events</h3>
 
                     <table className="table__" >
-                        <tr className="tr__">
-                            <th >Day</th>
-                            <th >Description</th>
-                            <th >Status</th>
-                        </tr>
-                        {user.postedAppointements.map((data) =>
-                            //@ts-ignore
-                            <tr className="tr__" key={data.id}>
-                                <td className="th__" >{data.start}</td>
-                                <td className="th__">{data.description}</td>
-                                <td className="th__" >{data.status} </td>
+                        <tbody>
+                            <tr className="tr__">
+                                <th >Day</th>
+                                <th >Description</th>
+                                <th >Status</th>
                             </tr>
-                        )}
+                            {user.postedAppointements.map((data) =>
+                                //@ts-ignore
+                                <tr className="tr__" key={data.id}>
+                                    <td className="th__" >{data.start}</td>
+                                    <td className="th__">{data.description}</td>
+                                    <td className="th__" >{data.status} </td>
+                                </tr>
+                            )}
+                        </tbody>
                     </table>
 
 
