@@ -3,9 +3,11 @@ import { RootState } from "../../store/redux/rootState";
 import "./style.css";
 import AppointementModal from "./appointment/Appointment"
 import NotificationModal from "./notificaions/notificaions"
+import EditAppointement from "./edit/editAppointement"
 
 
-function Modals({ selectedDate }: any) {
+
+function Modals({ selectedDate, eventClick, setSelectedDoc }: any) {
   const modal = useSelector((state: RootState) => state.modal);
 
   switch (modal) {
@@ -13,6 +15,8 @@ function Modals({ selectedDate }: any) {
       return <AppointementModal selectedDate={selectedDate} />;
     case "notification":
       return <NotificationModal />;
+    case "edit":
+      return <EditAppointement selectedDate={selectedDate} eventClick={eventClick} setSelectedDoc={setSelectedDoc} />;
     default:
       return null
   }

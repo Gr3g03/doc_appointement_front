@@ -1,45 +1,39 @@
 import CloseIcon from "@mui/icons-material/Close";
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { invalidateModal } from "../../../store/stores/modal/modal.store";
-import useGetUser from "../../../hooks/useGetUser";
-import { setDoc } from "../../../store/stores/singleDoc/store.singleDoc";
-import { RootState } from "../../../store/redux/rootState";
 import axios from "axios";
 import { setUser } from "../../../store/stores/user/user.store";
 
 
-function AppointementModal({ selectedDate }: any) {
+function EditAppointement({ selectedDate, eventClick, setSelectedDoc }: any) {
 
-    const [error, setError] = useState("");
     const dispatch = useDispatch();
-    const user = useGetUser()
-
-    const getDoctor = useSelector((_state: RootState) => _state.doc)
 
     const changeDate = (date: string) => {
         return date.substring(0, date.length - 6);
     };
 
-    if (selectedDate === undefined || null) return <h1></h1>
-
-
     const handleSubmit = async (e: any) => {
         e.preventDefault()
+        const eventId = eventClick.event._def.publicId;
+
         const data = {
-            start: changeDate(selectedDate.startStr),
-            end: changeDate(selectedDate.endStr),
+
+            start: e.target.startDate.value,
+            end: e.target.endDate.value,
             title: e.target.title.value,
             description: e.target.description.value,
-            status: 'pending',
-            user_id: user?.id,
-            doctor_id: getDoctor?.id,
         }
-        const userFromServer = await (await axios.post("appointements", data)).data;
+
+        const userFromServer = await (await axios.put(`editappointements/${eventId}`, data)).data;
+        console.log(userFromServer);
 
         if (!userFromServer.error) {
-            dispatch(setDoc(userFromServer.updatedDoctor));
-            dispatch(setUser(userFromServer.updatedUser));
+            // dispatch(setDoc(userFromServer));
+            // dispatch(setUser(userFromServer));
+            // setTest(userFromServer)
+            dispatch(setUser(userFromServer.updatedUser))
+            setSelectedDoc(userFromServer.updatedEvent)
         }
     };
 
@@ -96,7 +90,7 @@ function AppointementModal({ selectedDate }: any) {
                                 name="startDate"
                                 className="startDate"
                                 required
-                                defaultValue={changeDate(selectedDate.startStr)}
+                            // defaultValue={changeDate(selectedDate.startStr)}
                             />
                         </label>
                         <label>
@@ -105,12 +99,10 @@ function AppointementModal({ selectedDate }: any) {
                                 type="date-time"
                                 name="endDate"
                                 className="endDate"
-                                defaultValue={changeDate(selectedDate.endStr)}
+                                // defaultValue={changeDate(selectedDate.endStr)}
                                 required
                             />
                         </label>
-
-                        {error !== "" ? <span className="email-error">{error}</span> : null}
                         <button type="submit">book</button>
                     </form>
                 </main>
@@ -118,4 +110,4 @@ function AppointementModal({ selectedDate }: any) {
         </div>
     );
 }
-export default AppointementModal;
+export default EditAppointement;

@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import Header from "../../../main/components/Header/index";
 import "./index.css"
-import FullCalendar, { DateSelectArg } from '@fullcalendar/react' // must go before plugins
+import FullCalendar, { DateSelectArg, EventClickArg } from '@fullcalendar/react' // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
@@ -13,31 +13,35 @@ import { setModal } from "../../../main/store/stores/modal/modal.store";
 import { RootState } from "../../../main/store/redux/rootState";
 import { setDoc } from "../../../main/store/stores/singleDoc/store.singleDoc";
 import useGetUser from "../../../main/hooks/useGetUser";
-
+import IUser from "../../../main/interfaces/IUser"
+import React from "react";
 
 
 const UserDashboard: FC = () => {
 
-    const [dataFromServer, setDataFromServer] = useState([])
+    const [dataFromServer, setDataFromServer] = useState<IUser[] | null>(null)
+    const [selectedDoc, setSelectedDoc] = useState<IUser | null>(null)
     const [selectedDate, SetSelectedDate,] = useState<DateSelectArg | null>(null)
+    const [eventClick, setEventClick] = useState<EventClickArg>(null)
     const getDoctor = useSelector((_state: RootState) => _state.doc)
     const user = useGetUser()
     const dispatch = useDispatch()
+    const calendarRef = React.createRef();
 
     useEffect(() => {
         getDataFroServer()
     }, [])
 
     async function getDataFroServer() {
-        let result = await (await axios.get(`doctors`)).data;
+        let result: IUser[] = await (await axios.get(`doctors`)).data;
         setDataFromServer(result)
     }
 
-
     const handleSelectedDoctor = (e: any) => {
         let copyOfDoctorcs = [...dataFromServer]
-        let SelectedDoctor = copyOfDoctorcs.find(doctor => doctor.firstName === e.target.value && doctor.doctor_id !== user.id)
+        let SelectedDoctor = copyOfDoctorcs.find(doctor => doctor.firstName === e.target.value && doctor.id !== user.id)
         dispatch(setDoc(SelectedDoctor))
+        setSelectedDoc(SelectedDoctor)
     }
 
     const todayDate = () => {
@@ -50,44 +54,84 @@ const UserDashboard: FC = () => {
         return date;
     };
 
-    const handleEvent = () => {
-        if (getDoctor === null) return []
-        let INITIAL_EVENTS = []
-        for (const element of getDoctor.acceptedAppointemets) {
+    // const handleEvent = () => {
+    //     if (getDoctor === null) return []
+    //     let INITIAL_EVENTS = []
+
+    //     for (const element of getDoctor.acceptedAppointemets) {
+
+    //         let color = "";
+    //         switch (element.status) {
+    //             case "confirmed":
+    //                 color = "#39c32f";
+    //                 break;
+    //             case "pending":
+    //                 color = "#d01212";
+    //                 break;
+    //             default:
+    //                 color = "#fc9605";
+
+    //         }
+    //         const item = {
+    //             id: `${element.id}`,
+    //             start: element.start,
+    //             end: element.end,
+    //             title: element.title,
+    //             description: element.description,
+    //             status: element.status,
+    //             allDay: false,
+    //             className: `${user.id === element.user_id ? "colors" : `${element.status}`
+    //                 }`,
+    //             backgroundColor: `${user.id === element.user_id ? color : "#FA1F1F"}`,
+    //             overlap: true,
+
+
+
+    //         }
+
+    //         INITIAL_EVENTS.push(item)
+    //     }
+    //     return INITIAL_EVENTS
+    // }
+
+
+
+
+    const handleEvents = () => {
+        if (getDoctor === null) return [];
+        const returnedArray = [];
+        for (const event of getDoctor.acceptedAppointemets) {
             let color = "";
-            switch (element.status) {
-                case "confirmed":
+            switch (event.status) {
+                case "approved":
                     color = "#39c32f";
                     break;
-                case "pending":
+                case "refused":
                     color = "#d01212";
                     break;
                 default:
                     color = "#fc9605";
-
             }
-            const item = {
-                start: element.start,
-                end: element.end,
-                title: element.title,
-                description: element.description,
-                status: element.status,
+
+            const object = {
+                title: event.title,
+                id: `${event.id}`,
+                start: event.start,
+                end: event.end,
                 allDay: false,
-                className: `${user.id === element.user_id ? "colors" : `${element.status}`
-                    }`,
-                backgroundColor: `${user.id === element.user_id ? color : "#FA1F1F"}`,
+                editable: false,
+                backgroundColor: `${user.id === event.user_id ? color : "#849fb7"}`,
                 overlap: false,
-
-
-
-            }
-            INITIAL_EVENTS.push(item)
+                className: `${user.id !== event.user_id ? "others-color-events" : `${event.status}`
+                    }`,
+            };
+            returnedArray.push(object);
         }
-        return INITIAL_EVENTS
-    }
+        return returnedArray;
+    };
 
-
-    let Final_event: any = handleEvent()
+    let Final_event: any = handleEvents()
+    console.log(Final_event)
 
     const handleDateSelect = (selectInfo: DateSelectArg) => {
         let calendarApi = selectInfo.view.calendar;
@@ -99,11 +143,12 @@ const UserDashboard: FC = () => {
         }
     };
 
-    const handleEventClick = (clickInfo: any) => {
-        if ((`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-            clickInfo.event.remove()
-        }
+    const handleEventClick = (eventClick: EventClickArg) => {
+        setEventClick(eventClick)
+        dispatch(setModal('edit'))
+
     }
+
 
     const busines = [
         {
@@ -113,6 +158,7 @@ const UserDashboard: FC = () => {
         }
     ]
 
+    if (dataFromServer === null) return <h1></h1>
     return (
         <main className="main_wrapper">
             <Header />
@@ -152,9 +198,18 @@ const UserDashboard: FC = () => {
                         eventClick={handleEventClick}
                         droppable={true}
                         validRange={{ start: todayDate(), end: "2023-01-01" }}
-                        selectOverlap={true}
                         height="750px"
                         businessHours={busines}
+                        slotDuration={{ minutes: 60 }}
+                        slotLabelInterval={{ minutes: 10 }}
+                        selectOverlap={() => {
+                            //@ts-ignore
+                            let calendarApi = calendarRef.current.getApi();
+                            if (calendarApi.view.type === "timeGridDay") {
+                                return false;
+                            }
+                            return true;
+                        }}
                     />
 
                 </section>
@@ -211,7 +266,7 @@ const UserDashboard: FC = () => {
 
 
             </section>
-            <Modals selectedDate={selectedDate} />
+            <Modals selectedDate={selectedDate} eventClick={eventClick} setSelectedDoc={setSelectedDoc} />
         </main>
 
     );

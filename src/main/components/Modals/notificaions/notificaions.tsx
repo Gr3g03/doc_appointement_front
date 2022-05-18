@@ -1,25 +1,16 @@
 import CloseIcon from "@mui/icons-material/Close";
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { invalidateModal } from "../../../store/stores/modal/modal.store";
 import useGetUser from "../../../hooks/useGetUser";
-import { setDoc } from "../../../store/stores/singleDoc/store.singleDoc";
-import { RootState } from "../../../store/redux/rootState";
-import axios from "axios";
-import { setUser } from "../../../store/stores/user/user.store";
+
 
 
 function NotificationModal() {
-    const [error, setError] = useState("");
     const dispatch = useDispatch();
     const user = useGetUser()
 
 
     const getOnlyPending = user.acceptedAppointemets.filter((event) => event.status.includes('pending'))
-
-
-
-    console.log(getOnlyPending);
 
     return (
         <div
