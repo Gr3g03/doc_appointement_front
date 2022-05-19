@@ -23,7 +23,6 @@ const Dashboard: FC = () => {
 
   const user = useGetUser()
   const navigate = useNavigate()
-  const [status, setStatus] = useState<any | null>(null)
   const [selectedDate, SetSelectedDate,] = useState<DateSelectArg | null>(null)
 
 
@@ -170,7 +169,6 @@ const Dashboard: FC = () => {
                 <th className="_th">Status</th>
               </tr>
               {user.acceptedAppointemets.map(data =>
-
                 //@ts-ignore
                 <tr className="tr__" key={data.id}>
                   <td className="th__" >{data.start}</td>
@@ -222,8 +220,6 @@ const Dashboard: FC = () => {
           </ul>
 
         </section>
-
-
       </section>
       <Modals selectedDate={selectedDate} />
 

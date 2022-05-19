@@ -32,13 +32,6 @@ const UserDashboard: FC = () => {
         getDataFroServer()
     }, [])
 
-
-
-    const event = useSelector((_state: RootState) => _state.event)
-
-    // console.log(event[1])
-
-
     let docEvents = () => {
         if (selectedDoc === null) return <span>0</span>
 
@@ -71,51 +64,11 @@ const UserDashboard: FC = () => {
         return date;
     };
 
-    // const handleEvent = () => {
-    //     if (getDoctor === null) return []
-    //     let INITIAL_EVENTS = []
-
-    //     for (const element of getDoctor.acceptedAppointemets) {
-
-    //         let color = "";
-    //         switch (element.status) {
-    //             case "confirmed":
-    //                 color = "#39c32f";
-    //                 break;
-    //             case "pending":
-    //                 color = "#d01212";
-    //                 break;
-    //             default:
-    //                 color = "#fc9605";
-
-    //         }
-    //         const item = {
-    //             id: `${element.id}`,
-    //             start: element.start,
-    //             end: element.end,
-    //             title: element.title,
-    //             description: element.description,
-    //             status: element.status,
-    //             allDay: false,
-    //             className: `${user.id === element.user_id ? "colors" : `${element.status}`
-    //                 }`,
-    //             backgroundColor: `${user.id === element.user_id ? color : "#FA1F1F"}`,
-    //             overlap: true,
-
-
-
-    //         }
-
-    //         INITIAL_EVENTS.push(item)
-    //     }
-    //     return INITIAL_EVENTS
-    // }
-
 
     const handleEvents = () => {
-        if (selectedDoc === null) return [];
+        if (getDoctor === null) return [];
         const returnedArray = [];
-        for (const event of selectedDoc.acceptedAppointemets) {
+        for (const event of getDoctor.acceptedAppointemets) {
             let color = "";
             switch (event.status) {
                 case "approved":
@@ -146,7 +99,6 @@ const UserDashboard: FC = () => {
     };
 
     let Final_event: any = handleEvents()
-    // console.log(Final_event)
 
     const handleDateSelect = (selectInfo: DateSelectArg) => {
         let calendarApi = selectInfo.view.calendar;

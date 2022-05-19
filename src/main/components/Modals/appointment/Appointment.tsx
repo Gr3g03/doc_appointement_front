@@ -1,5 +1,4 @@
 import CloseIcon from "@mui/icons-material/Close";
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { invalidateModal } from "../../../store/stores/modal/modal.store";
 import useGetUser from "../../../hooks/useGetUser";
@@ -11,7 +10,6 @@ import { setUser } from "../../../store/stores/user/user.store";
 
 function AppointementModal({ selectedDate }: any) {
 
-    const [error, setError] = useState("");
     const dispatch = useDispatch();
     const user = useGetUser()
 
@@ -109,8 +107,6 @@ function AppointementModal({ selectedDate }: any) {
                                 required
                             />
                         </label>
-
-                        {error !== "" ? <span className="email-error">{error}</span> : null}
                         <button type="submit">book</button>
                     </form>
                 </main>
