@@ -182,7 +182,7 @@ const Dashboard: FC = () => {
 
                       <option  >{data?.status}</option>
                       <option className="option2" value="completed">completed</option>
-                    </select> <button onClick={() => {
+                    </select> <button className="delete_btn" onClick={() => {
                       handleDelte(data.id);
                     }}>x</button>
                   </td>

@@ -1,39 +1,46 @@
 import CloseIcon from "@mui/icons-material/Close";
 import { useDispatch } from "react-redux";
-import { invalidateModal } from "../../../store/stores/modal/modal.store";
+import { invalidateModal, setModal } from "../../../store/stores/modal/modal.store";
 import axios from "axios";
 import { setUser } from "../../../store/stores/user/user.store";
+import useGetUser from "../../../hooks/useGetUser";
+import { setEvent } from "../../../store/stores/event/event.store";
+import { setDoc } from "../../../store/stores/singleDoc/store.singleDoc";
 
 
 function EditAppointement({ selectedDate, eventClick, setSelectedDoc }: any) {
 
     const dispatch = useDispatch();
+    const user = useGetUser()
+
+    // console.log(user.)
 
     const changeDate = (date: string) => {
         return date.substring(0, date.length - 6);
     };
 
+
     const handleSubmit = async (e: any) => {
-        e.preventDefault()
+        e.preventDefault();
         const eventId = eventClick.event._def.publicId;
 
-        const data = {
+        const date = e.target.date.value;
+        const startTime = e.target.startTime.value;
+        const endTime = e.target.endTime.value;
 
-            start: e.target.startDate.value,
-            end: e.target.endDate.value,
-            title: e.target.title.value,
-            description: e.target.description.value,
-        }
+        // const eventId = eventClick.event._def.publicId;
 
-        const userFromServer = await (await axios.put(`editappointements/${eventId}`, data)).data;
-        console.log(userFromServer);
-
-        if (!userFromServer.error) {
-            // dispatch(setDoc(userFromServer));
-            // dispatch(setUser(userFromServer));
-            // setTest(userFromServer)
-            dispatch(setUser(userFromServer.updatedUser))
-            setSelectedDoc(userFromServer.updatedEvent)
+        const title = e.target.title.value;
+        const description = e.target.description.value;
+        const start = `${date}T${startTime}`;
+        const end = `${date}T${endTime}`;
+        console.log(startTime, endTime);
+        const response = await axios.put(`editappointements/${eventId}`, { start, end, title, description });
+        if (!response.data.error) {
+            dispatch(setUser(response.data.updatedUser));
+            setModal("");
+        } else {
+            alert(response.data.error);
         }
     };
 
@@ -83,24 +90,48 @@ function EditAppointement({ selectedDate, eventClick, setSelectedDoc }: any) {
                                 required
                             />
                         </label>
-                        <label>
+                        {/* <label>
                             start Date:
                             <input
-                                type="date-time"
+                                type="date"
                                 name="startDate"
                                 className="startDate"
                                 required
                             // defaultValue={changeDate(selectedDate.startStr)}
                             />
+                        </label> */}
+                        <label>
+                            DATE:
+                            <input
+                                type="date"
+                                className="normal-input"
+                                name="date"
+                                required
+                            // defaultValue={startDate}
+                            />
                         </label>
                         <label>
-                            end Date:
+                            Start Time
                             <input
-                                type="date-time"
-                                name="endDate"
-                                className="endDate"
-                                // defaultValue={changeDate(selectedDate.endStr)}
+                                type="time"
+                                className="normal-input"
+                                name="startTime"
+                                min={"08:00:00"}
+                                max={"16:00:00"}
                                 required
+                            // defaultValue={startTime}
+                            />
+                        </label>
+                        <label>
+                            End Time
+                            <input
+                                type="time"
+                                className="normal-input"
+                                name="endTime"
+                                min={"08:00:00"}
+                                max={"16:00:00"}
+                                required
+                            // defaultValue={endTime}
                             />
                         </label>
                         <button type="submit">book</button>

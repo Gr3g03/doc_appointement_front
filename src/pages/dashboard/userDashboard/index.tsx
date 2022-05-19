@@ -19,7 +19,7 @@ import React from "react";
 
 const UserDashboard: FC = () => {
 
-    const [dataFromServer, setDataFromServer] = useState<IUser[] | null>(null)
+    const [dataFromServer, setDataFromServer] = useState<IUser[] | null>([])
     const [selectedDoc, setSelectedDoc] = useState<IUser | null>(null)
     const [selectedDate, SetSelectedDate,] = useState<DateSelectArg | null>(null)
     const [eventClick, setEventClick] = useState<EventClickArg>(null)
@@ -32,8 +32,25 @@ const UserDashboard: FC = () => {
         getDataFroServer()
     }, [])
 
+
+
+    const event = useSelector((_state: RootState) => _state.event)
+
+    // console.log(event[1])
+
+
+    let docEvents = () => {
+        if (selectedDoc === null) return <span>0</span>
+
+        else {
+            let docToShow = selectedDoc.acceptedAppointemets
+            return docToShow.length
+        }
+    }
+
+
     async function getDataFroServer() {
-        let result: IUser[] = await (await axios.get(`doctors`)).data;
+        let result = await (await axios.get(`doctors`)).data;
         setDataFromServer(result)
     }
 
@@ -95,12 +112,10 @@ const UserDashboard: FC = () => {
     // }
 
 
-
-
     const handleEvents = () => {
-        if (getDoctor === null) return [];
+        if (selectedDoc === null) return [];
         const returnedArray = [];
-        for (const event of getDoctor.acceptedAppointemets) {
+        for (const event of selectedDoc.acceptedAppointemets) {
             let color = "";
             switch (event.status) {
                 case "approved":
@@ -131,7 +146,7 @@ const UserDashboard: FC = () => {
     };
 
     let Final_event: any = handleEvents()
-    console.log(Final_event)
+    // console.log(Final_event)
 
     const handleDateSelect = (selectInfo: DateSelectArg) => {
         let calendarApi = selectInfo.view.calendar;
@@ -237,7 +252,8 @@ const UserDashboard: FC = () => {
                     <ul className="event-list">
                         <li>
                             <h4>
-                                events <span> {user.postedAppointements.length}</span>
+
+                                events <span> {docEvents()}  </span>
                             </h4>
                         </li>
                         <li className="event-list__item pending">
