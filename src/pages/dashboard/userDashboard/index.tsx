@@ -41,7 +41,6 @@ const UserDashboard: FC = () => {
         }
     }
 
-
     async function getDataFroServer() {
         let result = await (await axios.get(`doctors`)).data;
         setDataFromServer(result)
@@ -77,8 +76,11 @@ const UserDashboard: FC = () => {
                 case "refused":
                     color = "#d01212";
                     break;
+                case "other":
+                    color = "#FF0000 ";
+                    break;
                 default:
-                    color = "#fc9605";
+                    color = "#FF0000";
             }
 
             const object = {
@@ -88,8 +90,15 @@ const UserDashboard: FC = () => {
                 end: event.end,
                 allDay: false,
                 editable: false,
-                backgroundColor: `${user.id === event.user_id ? color : "#849fb7"}`,
+                eventLimit: false, // for all non-agenda views
                 overlap: false,
+                views: {
+                    agenda: {
+                        eventLimit: 1 // adjust to 6 only for agendaWeek/agendaDay
+                    }
+                },
+                backgroundColor: `${user.id === event.user_id ? color : "#849fb7"}`,
+                selectOverlap: true,
                 className: `${user.id !== event.user_id ? "others-color-events" : `${event.status}`
                     }`,
             };
@@ -110,6 +119,8 @@ const UserDashboard: FC = () => {
         }
     };
 
+
+
     const handleEventClick = (eventClick: EventClickArg) => {
         setEventClick(eventClick)
         dispatch(setModal('edit'))
@@ -124,6 +135,8 @@ const UserDashboard: FC = () => {
             endTime: '18:00'
         }
     ]
+
+
 
     if (dataFromServer === null) return <h1></h1>
     return (
@@ -167,16 +180,9 @@ const UserDashboard: FC = () => {
                         validRange={{ start: todayDate(), end: "2023-01-01" }}
                         height="750px"
                         businessHours={busines}
-                        slotDuration={{ minutes: 60 }}
                         slotLabelInterval={{ minutes: 10 }}
-                        selectOverlap={() => {
-                            //@ts-ignore
-                            let calendarApi = calendarRef.current.getApi();
-                            if (calendarApi.view.type === "timeGridDay") {
-                                return false;
-                            }
-                            return true;
-                        }}
+                        selectOverlap={true}
+
                     />
 
                 </section>
@@ -199,6 +205,7 @@ const UserDashboard: FC = () => {
                                 </tr>
                             )}
                         </tbody>
+
                     </table>
 
                     <ul className="event-list">
@@ -224,6 +231,17 @@ const UserDashboard: FC = () => {
                                 {
                                     user.postedAppointements.filter((event) =>
                                         event.status.includes("completed")
+                                    ).length
+                                }
+
+                            </span>
+                        </li>
+                        <li className="event-list__item other">
+                            Other
+                            <span>
+                                {
+                                    getDoctor?.acceptedAppointemets.filter((event) =>
+                                        event.user_id !== user.id
                                     ).length
                                 }
 

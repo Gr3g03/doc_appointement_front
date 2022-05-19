@@ -32,7 +32,7 @@ function EditAppointement({ selectedDate, eventClick, setSelectedDoc }: any) {
         if (!response.data.error) {
             dispatch(setUser(response.data.updatedUser));
             dispatch(setEvent(response.data.updatedEvent))
-            setModal("");
+            dispatch(setModal(''))
         } else {
             alert(response.data.error);
         }

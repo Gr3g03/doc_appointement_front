@@ -6,6 +6,10 @@
 
 }
 
+a {
+    text-decoration: none;
+}
+
 .main_wrapper {
     display: grid;
     grid-template-rows: 1fr 1fr;
@@ -81,6 +85,13 @@
 .completed {
     padding: 0.2rem;
     background-color: rgb(47, 211, 47);
+    border-radius: 8px;
+    height: 25px;
+}
+
+.other {
+    padding: 0.2rem;
+    background-color: #FF0000;
     border-radius: 8px;
     height: 25px;
 }

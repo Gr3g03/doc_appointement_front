@@ -1,6 +1,6 @@
 import CloseIcon from "@mui/icons-material/Close";
 import { useDispatch, useSelector } from "react-redux";
-import { invalidateModal } from "../../../store/stores/modal/modal.store";
+import { invalidateModal, setModal } from "../../../store/stores/modal/modal.store";
 import useGetUser from "../../../hooks/useGetUser";
 import { setDoc } from "../../../store/stores/singleDoc/store.singleDoc";
 import { RootState } from "../../../store/redux/rootState";
@@ -24,20 +24,41 @@ function AppointementModal({ selectedDate }: any) {
 
     const handleSubmit = async (e: any) => {
         e.preventDefault()
-        const data = {
-            start: changeDate(selectedDate.startStr),
-            end: changeDate(selectedDate.endStr),
-            title: e.target.title.value,
-            description: e.target.description.value,
-            status: 'pending',
-            user_id: user?.id,
-            doctor_id: getDoctor?.id,
-        }
-        const userFromServer = await (await axios.post("appointements", data)).data;
+        if (user.isDoctor) {
+            const data = {
+                start: changeDate(selectedDate.startStr),
+                end: changeDate(selectedDate.endStr),
+                title: e.target.title.value,
+                description: e.target.description.value,
+                status: 'pending',
+                user_id: user?.id,
+                doctor_id: user?.id,
+            }
+            const userFromServer = await (await axios.post("appointements", data)).data;
 
-        if (!userFromServer.error) {
-            dispatch(setDoc(userFromServer.updatedDoctor));
-            dispatch(setUser(userFromServer.updatedUser));
+            if (!userFromServer.error) {
+                dispatch(setDoc(userFromServer.updatedDoctor));
+                dispatch(setUser(userFromServer.updatedUser));
+                dispatch(setModal(''))
+            }
+        } else if (!user.isDoctor) {
+            const data = {
+                start: changeDate(selectedDate.startStr),
+                end: changeDate(selectedDate.endStr),
+                title: e.target.title.value,
+                description: e.target.description.value,
+                status: 'pending',
+                user_id: user?.id,
+                doctor_id: getDoctor?.id,
+
+            }
+            const userFromServer = await (await axios.post("appointements", data)).data;
+
+            if (!userFromServer.error) {
+                dispatch(setDoc(userFromServer.updatedDoctor));
+                dispatch(setUser(userFromServer.updatedUser));
+                dispatch(setModal(''))
+            }
         }
     };
 

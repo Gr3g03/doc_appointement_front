@@ -34,8 +34,8 @@ const Dashboard: FC = () => {
       status: e.target.value
     }
     const newData = await (await axios.put(`appointement/${project_id}`, data)).data;
-    dispatch(setEvent(newData))
-    dispatch(setDoc(newData))
+    dispatch(setEvent(newData.data))
+    dispatch(setDoc(newData.data))
 
     if (newData === "delete") {
 
@@ -109,8 +109,8 @@ const Dashboard: FC = () => {
   const handleDelte = async (id: any) => {
     const newData = await (await axios.delete(`deleteApp/${id}`)).data;
     if (!newData) {
-      dispatch(setDoc(newData.updatedDoctor));
-      dispatch(setUser(newData.updatedUser));
+      dispatch(setDoc(newData.data.updatedDoctor));
+      dispatch(setUser(newData.data.updatedUser));
     }
 
   }
@@ -154,7 +154,7 @@ const Dashboard: FC = () => {
             weekends={false}
             height="750px"
             validRange={{ start: todayDate(), end: "2023-01-01" }}
-            // select={handleDateSelect}
+            select={handleDateSelect}
             eventClick={handleEventClick}
           />
 

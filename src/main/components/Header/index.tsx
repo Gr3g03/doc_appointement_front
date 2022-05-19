@@ -5,6 +5,9 @@ import Button from '@mui/material/Button';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import "./style.css"
 import useGetUser from "../../hooks/useGetUser";
+import { setModal } from "../../store/stores/modal/modal.store";
+import Badge from "@mui/material/Badge";
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 
 const Header = () => {
 
@@ -15,6 +18,8 @@ const Header = () => {
   const handleSubmit = () => {
     dispatch(onLogout())
   }
+
+  const getOnlyPending = user.acceptedAppointemets.filter((event) => event.status.includes('pending'))
 
 
   if (user?.isDoctor) {
@@ -48,6 +53,14 @@ const Header = () => {
                 }} />
               </li>
             </Link>
+            <li className="headerli">
+              <Badge badgeContent={getOnlyPending.length} onClick={() => {
+                dispatch(setModal('notification'))
+              }
+              } color="secondary">
+                <NotificationsNoneIcon color="action" />
+              </Badge>
+            </li>
             <li className="headerli">
               <Button className="primary" color="secondary" variant="outlined" onClick={handleSubmit} sx={{
                 color: "white",
