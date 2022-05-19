@@ -4,37 +4,71 @@ import { invalidateModal, setModal } from "../../../store/stores/modal/modal.sto
 import axios from "axios";
 import { setUser } from "../../../store/stores/user/user.store";
 import { setEvent } from "../../../store/stores/event/event.store";
+import useGetUser from "../../../hooks/useGetUser";
+import { setDoc } from "../../../store/stores/singleDoc/store.singleDoc";
 
 
-function EditAppointement({ selectedDate, eventClick, setSelectedDoc }: any) {
+function EditAppointement({ selectedDate, eventClick, setSelectedDoc, docEventClick }: any) {
 
     const dispatch = useDispatch();
 
+    const user = useGetUser()
     const changeDate = (date: string) => {
         return date.substring(0, date.length - 6);
     };
 
+    console.log(docEventClick);
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
-        const eventId = eventClick.event._def.publicId;
 
-        const date = e.target.date.value;
-        const startTime = e.target.startTime.value;
-        const endTime = e.target.endTime.value;
+        if (user.isDoctor) {
+            const eventId = docEventClick.event._def.publicId;
+            console.log(docEventClick.event._def.publicId);
 
-        const title = e.target.title.value;
-        const description = e.target.description.value;
-        const start = `${date}T${startTime}`;
-        const end = `${date}T${endTime}`;
-        console.log(startTime, endTime);
-        const response = await axios.put(`editappointements/${eventId}`, { start, end, title, description });
-        if (!response.data.error) {
-            dispatch(setUser(response.data.updatedUser));
-            dispatch(setEvent(response.data.updatedEvent))
-            dispatch(setModal(''))
-        } else {
-            alert(response.data.error);
+
+            const date = e.target.date.value;
+            const startTime = e.target.startTime.value;
+            const endTime = e.target.endTime.value;
+
+            const title = e.target.title.value;
+            const description = e.target.description.value;
+            const start = `${date}T${startTime}`;
+            const end = `${date}T${endTime}`;
+
+            const response = await axios.put(`editappointements/${eventId}`, { start, end, title, description });
+            if (!response.data.error) {
+                dispatch(setUser(response.data.updatedUser));
+                dispatch(setEvent(response.data.updatedEvent))
+                dispatch(setModal(''))
+            } else {
+                alert(response.data.error);
+            }
+        }
+
+        else if (!user.isDoctor) {
+            const eventId = eventClick.event._def.publicId;
+            console.log(eventClick.event._def.publicId);
+
+
+            const date = e.target.date.value;
+            const startTime = e.target.startTime.value;
+            const endTime = e.target.endTime.value;
+
+            const title = e.target.title.value;
+            const description = e.target.description.value;
+            const start = `${date}T${startTime}`;
+            const end = `${date}T${endTime}`;
+
+            const response = await axios.put(`editappointements/${eventId}`, { start, end, title, description });
+            if (!response.data.error) {
+                dispatch(setUser(response.data.updatedUser));
+                dispatch(setEvent(response.data.updatedEvent))
+                dispatch(setModal(''))
+            } else {
+                alert(response.data.error);
+            }
+
         }
     };
 
@@ -60,7 +94,7 @@ function EditAppointement({ selectedDate, eventClick, setSelectedDoc }: any) {
                             dispatch(invalidateModal());
                         }}
                     />
-                    <h2>Book Now</h2>
+                    <h2>Edit</h2>
                 </header>
                 <main className="modal-body">
                     <form
@@ -85,7 +119,7 @@ function EditAppointement({ selectedDate, eventClick, setSelectedDoc }: any) {
                             />
                         </label>
                         <label>
-                            DATE:
+                            date:
                             <input
                                 type="date"
                                 className="normal-input"
@@ -115,7 +149,7 @@ function EditAppointement({ selectedDate, eventClick, setSelectedDoc }: any) {
                                 required
                             />
                         </label>
-                        <button type="submit">book</button>
+                        <button type="submit">Submit</button>
                     </form>
                 </main>
             </div>

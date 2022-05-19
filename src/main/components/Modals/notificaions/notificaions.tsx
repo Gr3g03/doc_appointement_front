@@ -38,7 +38,7 @@ function NotificationModal() {
                 <main className="modal-body">
 
 
-                    <table className="table__" >
+                    <table className="table__notification" >
                         <tbody>
                             <tr className="tr__">
                                 <th className="th__">Day</th>

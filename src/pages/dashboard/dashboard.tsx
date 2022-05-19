@@ -1,4 +1,4 @@
-import FullCalendar, { DateSelectArg } from "@fullcalendar/react";
+import FullCalendar, { DateSelectArg, EventClickArg } from "@fullcalendar/react";
 import { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../main/components/Header/index";
@@ -23,6 +23,7 @@ const Dashboard: FC = () => {
 
   const user = useGetUser()
   const navigate = useNavigate()
+  const [docEventClick, setDocEventClick] = useState<EventClickArg>(null)
   const [selectedDate, SetSelectedDate,] = useState<DateSelectArg | null>(null)
 
 
@@ -61,6 +62,7 @@ const Dashboard: FC = () => {
       }
       const item = {
         start: element.start,
+        id: `${element.id}`,
         end: element.end,
         title: element.title,
         description: element.description,
@@ -99,11 +101,9 @@ const Dashboard: FC = () => {
     }
   };
 
-  const handleEventClick = (clickInfo: any) => {
-    if ((`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-      clickInfo.event.remove()
-
-    }
+  const handleEventClick = (clickInfo: EventClickArg) => {
+    setDocEventClick(clickInfo)
+    dispatch(setModal('edit'))
   }
 
   const handleDelte = async (id: any) => {
@@ -221,7 +221,7 @@ const Dashboard: FC = () => {
 
         </section>
       </section>
-      <Modals selectedDate={selectedDate} />
+      <Modals selectedDate={selectedDate} docEventClick={docEventClick} />
 
     </main>
   );
