@@ -14,9 +14,7 @@ import { RootState } from "../../../main/store/redux/rootState";
 import { setDoc } from "../../../main/store/stores/singleDoc/store.singleDoc";
 import useGetUser from "../../../main/hooks/useGetUser";
 import IUser from "../../../main/interfaces/IUser"
-import React from "react";
 import { toast } from "react-toastify";
-import IEvent from "../../../main/interfaces/IEvent";
 
 
 const UserDashboard: FC = () => {
@@ -99,6 +97,7 @@ const UserDashboard: FC = () => {
                 status: event.status,
                 eventLimit: true,
                 overlap: false,
+
                 views: {
                     agenda: {
                         eventLimit: 1
@@ -108,9 +107,16 @@ const UserDashboard: FC = () => {
                 selectOverlap: true,
                 className: `${user.id !== event.user_id ? "others-color-events" : `${event.status}`
                     }`,
+                eventRender: function (info: any) {
+                    if (info.event.title) {
+                        info._def.backgroundColor = "#FF0000";
+                    }
+                }
+
             };
             returnedArray.push(object);
         }
+
         return returnedArray;
     };
 
@@ -135,6 +141,10 @@ const UserDashboard: FC = () => {
         }
     };
 
+
+    const handleHover = () => {
+        <div>test</div>
+    }
 
 
     const handleEventClick = (eventClick: EventClickArg) => {
@@ -210,6 +220,7 @@ const UserDashboard: FC = () => {
                         businessHours={busines}
                         slotLabelInterval={{ minutes: 10 }}
                         selectOverlap={true}
+                        eventMouseEnter={handleHover}
 
                     />
 
