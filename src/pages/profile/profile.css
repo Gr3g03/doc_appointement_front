@@ -16,6 +16,13 @@
     margin-left: 2rem;
 }
 
+
+.Education_container {
+    display: grid;
+    list-style: none;
+    padding: 0.5rem;
+}
+
 .sidebar__top>img {
     margin-bottom: -20px;
     width: 100%;

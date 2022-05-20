@@ -11,13 +11,7 @@ import { setDoc } from "../../../store/stores/singleDoc/store.singleDoc";
 function EditAppointement({ selectedDate, eventClick, setSelectedDoc, docEventClick }: any) {
 
     const dispatch = useDispatch();
-
     const user = useGetUser()
-    const changeDate = (date: string) => {
-        return date.substring(0, date.length - 6);
-    };
-
-    console.log(docEventClick);
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
@@ -25,7 +19,6 @@ function EditAppointement({ selectedDate, eventClick, setSelectedDoc, docEventCl
         if (user.isDoctor) {
             const eventId = docEventClick.event._def.publicId;
             console.log(docEventClick.event._def.publicId);
-
 
             const date = e.target.date.value;
             const startTime = e.target.startTime.value;
@@ -49,7 +42,6 @@ function EditAppointement({ selectedDate, eventClick, setSelectedDoc, docEventCl
         else if (!user.isDoctor) {
             const eventId = eventClick.event._def.publicId;
             console.log(eventClick.event._def.publicId);
-
 
             const date = e.target.date.value;
             const startTime = e.target.startTime.value;

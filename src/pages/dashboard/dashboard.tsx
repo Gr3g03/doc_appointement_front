@@ -15,9 +15,7 @@ import { setUser } from "../../main/store/stores/user/user.store";
 import { setModal } from "../../main/store/stores/modal/modal.store";
 import Modals from "../../main/components/Modals";
 import { setEvent } from "../../main/store/stores/event/event.store";
-import IEvent from "../../main/interfaces/IEvent";
-
-
+import { toast } from "react-toastify";
 
 
 const Dashboard: FC = () => {
@@ -91,6 +89,8 @@ const Dashboard: FC = () => {
     calendarApi.changeView("timeGridDay", selectInfo.startStr);
 
 
+
+
     if (selectInfo.view.type === "timeGridDay") {
       SetSelectedDate(selectInfo);
       dispatch(setModal('appoinment'))
@@ -101,19 +101,16 @@ const Dashboard: FC = () => {
   const handleEventClick = (clickInfo: EventClickArg) => {
     setDocEventClick(clickInfo)
 
-    if (user.acceptedAppointemets.filter((event) => event.status.includes("pending")
-    )
-    ) {
+    const getStatus = clickInfo.event._def.extendedProps.status
 
-      dispatch(setModal('edit'))
-    }
-
-
-    else if (user.acceptedAppointemets.filter((event) => event.status.includes("completed")
-    )
-    ) {
+    if (getStatus.includes('completed')) {
 
       dispatch(setModal(''))
+      toast.warning('cant edit a completed event')
+    }
+
+    else {
+      dispatch(setModal('edit'))
     }
 
   }

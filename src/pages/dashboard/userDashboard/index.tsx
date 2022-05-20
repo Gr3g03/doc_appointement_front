@@ -15,6 +15,8 @@ import { setDoc } from "../../../main/store/stores/singleDoc/store.singleDoc";
 import useGetUser from "../../../main/hooks/useGetUser";
 import IUser from "../../../main/interfaces/IUser"
 import React from "react";
+import { toast } from "react-toastify";
+import IEvent from "../../../main/interfaces/IEvent";
 
 
 const UserDashboard: FC = () => {
@@ -26,7 +28,10 @@ const UserDashboard: FC = () => {
     const getDoctor = useSelector((_state: RootState) => _state.doc)
     const user = useGetUser()
     const dispatch = useDispatch()
-    const calendarRef = React.createRef();
+
+
+
+
 
     useEffect(() => {
         getDataFroServer()
@@ -40,6 +45,7 @@ const UserDashboard: FC = () => {
             return docToShow.length
         }
     }
+
 
     async function getDataFroServer() {
         let result = await (await axios.get(`doctors`)).data;
@@ -90,11 +96,12 @@ const UserDashboard: FC = () => {
                 end: event.end,
                 allDay: false,
                 editable: false,
-                eventLimit: false, // for all non-agenda views
+                status: event.status,
+                eventLimit: true,
                 overlap: false,
                 views: {
                     agenda: {
-                        eventLimit: 1 // adjust to 6 only for agendaWeek/agendaDay
+                        eventLimit: 1
                     }
                 },
                 backgroundColor: `${user.id === event.user_id ? color : "#849fb7"}`,
@@ -107,13 +114,22 @@ const UserDashboard: FC = () => {
         return returnedArray;
     };
 
+
     let Final_event: any = handleEvents()
 
     const handleDateSelect = (selectInfo: DateSelectArg) => {
         let calendarApi = selectInfo.view.calendar;
         calendarApi.changeView("timeGridDay", selectInfo.startStr);
 
-        if (selectInfo.view.type === "timeGridDay") {
+
+
+        console.log(selectInfo)
+        if (selectedDoc === null) {
+            dispatch(setModal(''))
+            toast.warning('please select a doctor')
+        }
+
+        else if (selectInfo.view.type === "timeGridDay") {
             SetSelectedDate(selectInfo);
             dispatch(setModal('appoinment'))
         }
@@ -123,7 +139,19 @@ const UserDashboard: FC = () => {
 
     const handleEventClick = (eventClick: EventClickArg) => {
         setEventClick(eventClick)
-        dispatch(setModal('edit'))
+
+        const getStatus = eventClick.event._def.extendedProps.status
+        console.log(eventClick)
+
+        if (getStatus.includes('completed')) {
+
+            dispatch(setModal(''))
+            toast.warning('cant edit a completed event')
+        }
+
+        else {
+            dispatch(setModal('edit'))
+        }
 
     }
 
@@ -172,7 +200,7 @@ const UserDashboard: FC = () => {
                         dayMaxEvents={true}
                         events={Final_event}
                         displayEventEnd={true}
-                        // weekends={false}
+                        weekends={false}
                         eventDurationEditable={true}
                         select={handleDateSelect}
                         eventClick={handleEventClick}
@@ -196,7 +224,7 @@ const UserDashboard: FC = () => {
                                 <th >Description</th>
                                 <th >Status</th>
                             </tr>
-                            {user.postedAppointements.map((data) =>
+                            {user.postedAppointements.map(data =>
                                 //@ts-ignore
                                 <tr className="tr__" key={data.id}>
                                     <td className="th__" >{data.start}</td>
@@ -220,8 +248,9 @@ const UserDashboard: FC = () => {
                             <span>
                                 {
                                     user.postedAppointements.filter((event) =>
-                                        event.status.includes("pending")
+                                        event.status.includes('pending')
                                     ).length
+
                                 }
                             </span>
                         </li>

@@ -34,9 +34,11 @@ const Profile = () => {
                     <ul className="Education_container">
 
 
-                        <li><div><h3>appointmets</h3>
-                            <h4>appointmets</h4>
-                            <span>appointmets</span><span>appointmets</span></div></li>
+                        <li className="li_El">
+                            <div><h3>appointmets</h3>
+                                <h4>appointmets</h4>
+                                <span>appointmets</span><span>appointmets</span></div>
+                        </li>
 
                     </ul>
                 </div>
