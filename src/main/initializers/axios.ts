@@ -13,21 +13,21 @@ const handleResponseMessage = (
     case eNotificationType.Success:
       toast.info(`${message}`, {
         position: "top-center",
-        autoClose: 3000,
+        autoClose: 1000,
         hideProgressBar: true,
         closeOnClick: true,
-        pauseOnHover: true,
-        draggable: false,
+        pauseOnHover: false,
+        draggable: true,
         progress: 0,
       });
       break;
     case eNotificationType.Error:
       toast.error(message, {
-        autoClose: 3000,
+        autoClose: 100,
         hideProgressBar: true,
         closeOnClick: true,
-        pauseOnHover: true,
-        draggable: false,
+        pauseOnHover: false,
+        draggable: true,
         progress: 0,
       });
       break;

@@ -15,6 +15,7 @@ import { setUser } from "../../main/store/stores/user/user.store";
 import { setModal } from "../../main/store/stores/modal/modal.store";
 import Modals from "../../main/components/Modals";
 import { setEvent } from "../../main/store/stores/event/event.store";
+import IEvent from "../../main/interfaces/IEvent";
 
 
 
@@ -29,7 +30,6 @@ const Dashboard: FC = () => {
 
   const dispatch = useDispatch()
 
-
   const handleSubmit = async (e: any, project_id: any) => {
     const data = {
       status: e.target.value
@@ -37,11 +37,6 @@ const Dashboard: FC = () => {
     const newData = await (await axios.put(`appointement/${project_id}`, data)).data;
     dispatch(setEvent(newData.data))
     dispatch(setDoc(newData.data))
-
-    if (newData === "delete") {
-
-    }
-
   }
 
   const handleEvent = () => {
@@ -95,15 +90,32 @@ const Dashboard: FC = () => {
     let calendarApi = selectInfo.view.calendar;
     calendarApi.changeView("timeGridDay", selectInfo.startStr);
 
+
     if (selectInfo.view.type === "timeGridDay") {
       SetSelectedDate(selectInfo);
       dispatch(setModal('appoinment'))
     }
+
   };
 
   const handleEventClick = (clickInfo: EventClickArg) => {
     setDocEventClick(clickInfo)
-    dispatch(setModal('edit'))
+
+    if (user.acceptedAppointemets.filter((event) => event.status.includes("pending")
+    )
+    ) {
+
+      dispatch(setModal('edit'))
+    }
+
+
+    else if (user.acceptedAppointemets.filter((event) => event.status.includes("completed")
+    )
+    ) {
+
+      dispatch(setModal(''))
+    }
+
   }
 
   const handleDelte = async (id: any) => {
@@ -179,7 +191,7 @@ const Dashboard: FC = () => {
                     }} >
 
                       <option  >{data?.status}</option>
-                      <option className="option2" value="completed">completed</option>
+                      <option className="option2" value="completed" >completed</option>
                     </select> <button className="delete_btn" onClick={() => {
                       handleDelte(data.id);
                     }}>x</button>

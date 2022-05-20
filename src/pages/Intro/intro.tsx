@@ -39,16 +39,21 @@ const Intro: FC = () => {
 
 
   const handleSubmit = () => {
-    dispatch(onLogin({ email, password }));
+    dispatch(onLogin({ email, password }
+
+    )
+    );
     if (user) {
-      console.log(user.isDoctor);
 
       if (user.isDoctor) {
         navigate('/dashboard')
-      } else {
+      }
+      else {
         navigate('/dashboard-user')
       }
-    }
+
+    } toast.success('welcome')
+
   }
 
   const handleButtonClick = () => {
