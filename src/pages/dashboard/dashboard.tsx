@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../main/components/Header/index";
 import useGetUser from "../../main/hooks/useGetUser";
 import "./dashboardd.css"
-import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
+import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -14,7 +14,6 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../../main/store/stores/user/user.store";
 import { setModal } from "../../main/store/stores/modal/modal.store";
 import Modals from "../../main/components/Modals";
-import { setEvent } from "../../main/store/stores/event/event.store";
 import { toast } from "react-toastify";
 
 
@@ -91,6 +90,9 @@ const Dashboard: FC = () => {
     let calendarApi = selectInfo.view.calendar;
     calendarApi.changeView("timeGridDay", selectInfo.startStr);
 
+    const getDate = selectInfo.view.calendar
+
+    console.log(getDate);
 
 
 
@@ -100,6 +102,8 @@ const Dashboard: FC = () => {
     }
 
   };
+
+
 
   const handleEventClick = (clickInfo: EventClickArg) => {
     setDocEventClick(clickInfo)
@@ -154,7 +158,7 @@ const Dashboard: FC = () => {
               center: 'title',
               right: 'dayGridMonth,timeGridWeek,timeGridDay'
             }}
-            editable={true}
+            editable={false}
             selectable={true}
             selectMirror={true}
             dayMaxEvents={true}

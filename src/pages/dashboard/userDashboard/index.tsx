@@ -1,8 +1,8 @@
 import { FC, useEffect, useState } from "react";
 import Header from "../../../main/components/Header/index";
 import "./index.css"
-import FullCalendar, { DateSelectArg, EventClickArg } from '@fullcalendar/react' // must go before plugins
-import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
+import FullCalendar, { DateSelectArg, EventClickArg } from '@fullcalendar/react'
+import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';

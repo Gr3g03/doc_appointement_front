@@ -45,9 +45,8 @@ function NotificationModal() {
                                 <th className="th__">Description</th>
                                 <th className="th__">Status</th>
                             </tr>
-                            {getOnlyPending.map((data) =>
-                                //@ts-ignore
-                                <tr className="tr__" key={data.id}>
+                            {getOnlyPending.map((data, index) =>
+                                <tr className="tr__" key={index}>
                                     <td className="th__" >{data.start}</td>
                                     <td className="th__">{data.description}</td>
                                     <td className="th__" >{data.status} </td>

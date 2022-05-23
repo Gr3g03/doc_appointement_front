@@ -5,7 +5,6 @@ import axios from "axios";
 import { setUser } from "../../../store/stores/user/user.store";
 import { setEvent } from "../../../store/stores/event/event.store";
 import useGetUser from "../../../hooks/useGetUser";
-import { setDoc } from "../../../store/stores/singleDoc/store.singleDoc";
 
 
 function EditAppointement({ selectedDate, eventClick, setSelectedDoc, docEventClick }: any) {
