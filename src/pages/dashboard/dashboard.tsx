@@ -34,8 +34,10 @@ const Dashboard: FC = () => {
       status: e.target.value
     }
     const newData = await (await axios.put(`appointement/${project_id}`, data)).data;
-    dispatch(setEvent(newData.data))
-    dispatch(setDoc(newData.data))
+    if (newData) {
+      dispatch(setDoc(newData.updatedDoctor));
+      dispatch(setUser(newData.updatedUser));
+    }
   }
 
   const handleEvent = () => {
