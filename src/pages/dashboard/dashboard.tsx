@@ -117,9 +117,9 @@ const Dashboard: FC = () => {
 
   const handleDelte = async (id: any) => {
     const newData = await (await axios.delete(`deleteApp/${id}`)).data;
-    if (!newData) {
-      dispatch(setDoc(newData.data.updatedDoctor));
-      dispatch(setUser(newData.data.updatedUser));
+    if (newData) {
+      dispatch(setDoc(newData.updatedDoctor));
+      dispatch(setUser(newData.updatedUser));
     }
 
   }
@@ -177,9 +177,8 @@ const Dashboard: FC = () => {
                 <th className="_th">Description</th>
                 <th className="_th">Status</th>
               </tr>
-              {user.acceptedAppointemets.map(data =>
-                //@ts-ignore
-                <tr className="tr__" key={data.id}>
+              {user.acceptedAppointemets.map((data, index) =>
+                <tr className="tr__" key={index}>
                   <td className="th__" >{data.start}</td>
                   <td className="th__">{data.description}</td>
                   <td className="th__" >
